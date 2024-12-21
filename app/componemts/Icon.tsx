@@ -26,7 +26,7 @@ const TabIcon : React.FC<TabIconProps> = ({ iconFamily, iconName, color, name, f
     const textStyle = focused ? styles.focusedText : styles.unfocusedText;
 
   return (
-    <View className="items-center justify-center gap-2" style = {{height: 70, paddingTop:37 , width: 80}}>
+    <View className="items-center justify-center gap-1" style = {{height: 70 ,paddingBottom: 20 ,width: 80}} > 
         {IconComponent && <IconComponent name={iconName} size={24} color={color} />}
 
         <Text style={[textStyle, { color }]}>
