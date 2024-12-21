@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import { AntDesign, Ionicons, Entypo, MaterialIcons,FontAwesome} from '@expo/vector-icons';
-type IconFamily = 'AntDesign' | 'Ionicons' | 'Entypo' | 'MaterialIcons' | 'FontAwesome'
+import { AntDesign, Ionicons, Entypo, MaterialIcons, FontAwesome, FontAwesome6} from '@expo/vector-icons';
+
+type IconFamily = 'AntDesign' | 'Ionicons' | 'Entypo' | 'MaterialIcons' | 'FontAwesome' | 'FontAwesome6'
 
 interface TabIconProps {
     iconFamily: IconFamily
@@ -17,6 +18,7 @@ const IconMap = {
     Entypo, 
     MaterialIcons,
     FontAwesome,
+    FontAwesome6,
 };
 
 const TabIcon : React.FC<TabIconProps> = ({ iconFamily, iconName, color, name, focused }) => {
@@ -26,9 +28,8 @@ const TabIcon : React.FC<TabIconProps> = ({ iconFamily, iconName, color, name, f
   return (
     <View className="items-center justify-center gap-2" style = {{height: 70, paddingTop:37 , width: 80}}>
         {IconComponent && <IconComponent name={iconName} size={24} color={color} />}
-        <Text style={[textStyle, { color }]}>
 
-        {/*if focused use font-psemibold else font-pregular, and make the font size extra small when its not forcused*/}
+        <Text style={[textStyle, { color }]}>
         {name}
         
       </Text> 
