@@ -4,13 +4,13 @@ import { Alert, BackHandler } from 'react-native';
 const useBackHandler = () =>  {
   useEffect(() => {
     const backAction = () => {
-      Alert.alert('等陣先!🧐', '真係要走?真係要走?咁好啦\n我只好求你繼續留係度😭', [
+      Alert.alert('等陣先!🧐', '唸下你有無野漏左要記錄?', [
         {
-          text: '我要繼續變強!One Punch💪',
+          text: '哎呀漏左小小嘢添💭',
           onPress: () => null,
           style: 'cancel',
         },
-        { text: '你傻左咩我寧願睇貓片啦🐱', onPress: () => BackHandler.exitApp() },
+        { text: '梗係無,放心啦✨', onPress: () => BackHandler.exitApp() },
       ]);
       return true;
     };
