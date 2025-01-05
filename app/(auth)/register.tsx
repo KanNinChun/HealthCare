@@ -1,4 +1,3 @@
-// app/(auth)/register.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -79,7 +78,7 @@ const RegisterScreen = () => {
     }
     setLoading(true);
     try {
-      const salt = await genSaltSync(10);
+      const salt = await genSaltSync(4); // when login compare with it can be faster
       const passwordHash = await hashSync(password, salt);
 
       await database.withTransactionAsync(async () => {
@@ -202,7 +201,6 @@ const styles = StyleSheet.create({
   passwordContainer: {
     width: '100%',
     marginBottom: 10,
-
   },
   iconButton: {
     padding: 10,

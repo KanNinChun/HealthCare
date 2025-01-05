@@ -2,7 +2,7 @@
 import React from 'react'
 import { SQLiteDatabase, SQLiteProvider } from 'expo-sqlite'
 import { Stack} from 'expo-router'
-
+import { StatusBar } from 'expo-status-bar';
 export default function _layout() {
 
     const createDbIfNeeded = async (db: SQLiteDatabase) => {
@@ -18,6 +18,7 @@ export default function _layout() {
 
   return (
     <SQLiteProvider databaseName="healthcare.db" onInit={createDbIfNeeded}>
+      
         <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
