@@ -1,16 +1,55 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+// app/(tabs)/_layout.tsx
+import { View, Text, ActivityIndicator } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import TopTabBar from '../naviagtions/TopTabBar'
 import useBackHandler from '../componemts/useBackHandle'
-import { createStackNavigator } from '@react-navigation/stack';
+import * as SQLite from 'expo-sqlite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Redirect, router, Stack } from 'expo-router';
 
-const Stack = createStackNavigator();
+
+// Database Initialization
+let db: SQLite.SQLiteDatabase | null = null;
+
+
 
 export default function _layout() {
   useBackHandler();
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="TopTabBar" component={TopTabBar} options={{ headerShown: false}} />
-    </Stack.Navigator>
-  )
+    const [loading, setLoading] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const setup = async () => {
+             const checkLoginStatus = async () => {
+              try {
+                const token = await AsyncStorage.getItem('userToken');
+                setIsLoggedIn(!!token);
+              } catch (error) {
+                  console.error("Error while checking login status", error)
+                  setIsLoggedIn(false);
+              } finally {
+                setLoading(false)
+              }
+            }
+            await checkLoginStatus()
+
+        }
+        setup()
+    },[]);
+
+
+    if(loading){
+        return(
+            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                  <ActivityIndicator size="large" color="#0000ff"/>
+            </View>
+        )
+    }
+
+     if (!isLoggedIn) {
+         return router.replace('../login');
+    }
+    return (
+         <TopTabBar/>
+    )
 }
