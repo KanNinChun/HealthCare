@@ -1,8 +1,8 @@
-
 import React from 'react'
 import { SQLiteDatabase, SQLiteProvider } from 'expo-sqlite'
 import { Stack} from 'expo-router'
 import { StatusBar } from 'expo-status-bar';
+
 export default function _layout() {
 
     const createDbIfNeeded = async (db: SQLiteDatabase) => {
