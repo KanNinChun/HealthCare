@@ -8,6 +8,7 @@ import "../global.css"
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import LoginScreen from './(auth)/login';
 import RegisterScreen from './(auth)/register';
+import { StatusBar } from "expo-status-bar";
 
 export default function LandingPage() {
   const colorScheme = useColorScheme();
@@ -16,6 +17,7 @@ export default function LandingPage() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <StatusBar style="auto"/> 
       <ThemedView className="flex-1 justify-center items-center">
         <ThemedText>Welcome To Health Care</ThemedText>
         <ThemedText>Make your life better</ThemedText>

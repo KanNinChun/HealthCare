@@ -18,7 +18,7 @@ export default function _layout() {
 
   return (
     <SQLiteProvider databaseName="healthcare.db" onInit={createDbIfNeeded}>
-      
+      <StatusBar style="auto" />
         <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />

@@ -7,6 +7,8 @@ import HomeScreen from '../componemts/screens/HomeScreen';
 import SettingsScreen from '../componemts/screens/SettingScreen';
 import HealthInfoScreen from '../componemts/screens/HealthInfoScreen';
 import VisualizationScreen from '../componemts/screens/VisualizationScreen';
+import { DefaultNavigator } from 'expo-router/build/views/Navigator';
+
 
 export type TopTapBar = 
 {
@@ -23,9 +25,9 @@ const TopTabBar = () => {
     const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer; //獲取當前主題顏色
     const tabBarActiveTintColor = colorScheme === 'light' ? '#2f57f7' : '#FFA001'; // Light theme: orange, Dark theme: green
     const headerShown = false;
-
     return (
-        <Tab.Navigator
+        
+        <Tab.Navigator 
             tabBarPosition="bottom"
             screenOptions={{
                 tabBarShowLabel: headerShown, // Hide labels
@@ -37,7 +39,7 @@ const TopTabBar = () => {
                     borderColor: themeContainerStyle.color, // 一條灰色橫線[分隔線] '#232533'
                     height: 70,
                 },
-             
+                
             }}
         >
             <Tab.Screen name="主頁" component={HomeScreen}
@@ -101,6 +103,7 @@ const TopTabBar = () => {
                     )
                 }}
             />
+
         </Tab.Navigator>
     )
 }
