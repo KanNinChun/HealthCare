@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions} from 'react-native'
+import { StyleSheet} from 'react-native'
 import React from 'react'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useColorScheme} from '../hooks/useColorScheme';
@@ -7,8 +7,6 @@ import HomeScreen from '../componemts/screens/HomeScreen';
 import SettingsScreen from '../componemts/screens/SettingScreen';
 import HealthInfoScreen from '../componemts/screens/HealthInfoScreen';
 import VisualizationScreen from '../componemts/screens/VisualizationScreen';
-import { DefaultNavigator } from 'expo-router/build/views/Navigator';
-
 
 export type TopTapBar = 
 {

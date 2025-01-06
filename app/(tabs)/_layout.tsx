@@ -5,16 +5,13 @@ import TopTabBar from '../naviagtions/TopTabBar'
 import useBackHandler from '../componemts/useBackHandle'
 import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Redirect, router, Stack } from 'expo-router';
-
+import { router } from 'expo-router';
 
 // Database Initialization
 let db: SQLite.SQLiteDatabase | null = null;
 
-
-
 export default function _layout() {
-  useBackHandler();
+  //useBackHandler();
     const [loading, setLoading] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 

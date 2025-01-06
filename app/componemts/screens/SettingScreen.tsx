@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { useColorScheme } from '../../hooks/useColorScheme';
 import { ThemedText } from '../../componemts/ThemedText';
 import { ThemedView } from '../../componemts/ThemedView';
-import LoginScreen from '@/app/(auth)/login';
+
 
 export default function SettingScreen() {
   const router = useRouter();
