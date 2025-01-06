@@ -39,15 +39,7 @@ export default function LandingPage() {
   }, []);
 
 
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    )
-  }
-
-  if (!isLoggedIn) {
+    if (!isLoggedIn) {
     return (
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <StatusBar style="auto" />
@@ -74,6 +66,12 @@ export default function LandingPage() {
       </ThemeProvider>
     );
   }
+
+  if (isLoggedIn) {
+    // Navigate to the home page if the user is logged in
+    return <Redirect href="../(tabs)" />;
+  }
+    
 }
 
 const styles = StyleSheet.create({

@@ -31,7 +31,7 @@ const openDatabase = async () => {
     db = await SQLite.openDatabaseAsync('healthcare.db');
     return db;
   } catch (error) {
-    console.error("Error while opening the database in login page", error);
+    console.error("Error while opening the database                      in login page", error);
     return null;
   }
 }
