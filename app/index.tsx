@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, ActivityIndicator , ImageBackground} from "react-native";
+import { View,StyleSheet, TouchableOpacity, ActivityIndicator , ImageBackground} from "react-native";
 import { useColorScheme } from './hooks/useColorScheme';
 import { ThemedText } from './componemts/ThemedText';
 import { ThemedView } from './componemts/ThemedView';
@@ -48,29 +48,38 @@ export default function LandingPage() {
     return (
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <StatusBar style="auto" />
-        <ThemedView className="flex-1 justify-center items-center">
+
+        <View className="flex-1">
+
           <ImageBackground 
-          source={require('./')} 
-          style={{ flex: 1,width: '100%', height: '100%' }}/>
-          <ThemedText>Welcome To Health Care</ThemedText>
-          <ThemedText>Make your life better</ThemedText>
-          <Link className="text-xl font-bold text-red-600" href="../(tabs)">Go To Home Page!</Link>
+          source={require('../assets/images/bg2.png')} 
+          style={{ flex: 1}}
+          resizeMode="cover">
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => router.push('/login')}
-          >
-            <ThemedText style={styles.buttonText}>Login</ThemedText>
-          </TouchableOpacity>
+            <View style={styles.container}>
+              <ThemedText lightColor="#FFFFFF" type="title">Welcome To Health Care</ThemedText>
+              <ThemedText lightColor="#FFFFFF" type="description">Make your life better</ThemedText>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => router.push('/register')}
-          >
-            <ThemedText style={styles.buttonText}>Register</ThemedText>
-          </TouchableOpacity>
-          
-        </ThemedView>
+              <View style={styles.buttoncontainer}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => router.push('/login')}
+              >
+                <ThemedText style={styles.buttonText}>Login</ThemedText>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.button2}
+                onPress={() => router.push('/register')}
+              >
+              <ThemedText style={styles.buttonText}>Register</ThemedText>
+              </TouchableOpacity>
+              </View>
+            </View>
+           
+          </ImageBackground>
+        </View>
+       
       </ThemeProvider>
     );
   }
@@ -83,16 +92,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor:'rgba(0,0,0,0.2)'
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
+    fontWeight: '600',
+    letterSpacing: 1.5,
+    lineHeight: 36,
   },
-  button: {
+  buttoncontainer: {
+    flexDirection: 'column',
+    top: -190,
+  },
+  button:{
+    backgroundColor: '#007bff',
+    paddingVertical: 10,
+    paddingHorizontal: 130,
+    borderRadius: 5,
+   marginBottom: 20,
+  },
+  button2:{
     backgroundColor: '#007bff',
     padding: 10,
     borderRadius: 5,
-    marginTop: 10,
+   
   },
   buttonText: {
     color: 'white',
