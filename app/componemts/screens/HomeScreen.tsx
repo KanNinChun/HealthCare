@@ -7,6 +7,7 @@ import { ThemedText } from '../../componemts/ThemedText';
 import { ThemedView } from '../../componemts/ThemedView';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface User {
   id: number;
@@ -26,6 +27,7 @@ const openDatabase = async () => {
   }
 }
 export default function HomeScreen() {
+  const {top: safeTop} = useSafeAreaInsets();
   const colorScheme = useColorScheme();
   const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer; //獲取當前主題顏色
   const [username, setUsername] = useState<string | null>(null);
@@ -67,8 +69,9 @@ export default function HomeScreen() {
   }
   return (
     <ScrollView style={{ backgroundColor: themeContainerStyle.backgroundColor }}>
-      <ThemedView style={{ padding: 20 }}>
-        <ThemedText type='subtitle'>Welcome Back, {username}</ThemedText>
+      <ThemedView style={{ paddingTop: safeTop , paddingLeft: 5}}>
+        <ThemedText type='subtitle'>歡迎回來,</ThemedText>
+        <ThemedText type='username'>{username}</ThemedText>
         <TouchableOpacity style={[styles.button, { width: '60%', alignSelf: 'center' }]}  onPress={() => router.push('../componemts/screens/HeartRateScreen')}>
           <ThemedText style={styles.buttonText}>Check Heart Rate!</ThemedText>
         </TouchableOpacity>
