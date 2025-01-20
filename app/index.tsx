@@ -1,4 +1,4 @@
-import { Text, StyleSheet, TouchableOpacity, View, ActivityIndicator } from "react-native";
+import { StyleSheet, TouchableOpacity, ActivityIndicator , ImageBackground} from "react-native";
 import { useColorScheme } from './hooks/useColorScheme';
 import { ThemedText } from './componemts/ThemedText';
 import { ThemedView } from './componemts/ThemedView';
@@ -38,12 +38,20 @@ export default function LandingPage() {
     setup()
   }, []);
 
+  useEffect(() => {
+   if (isLoggedIn) {
+    router.replace('./(tabs)');
+   }
+  }, [isLoggedIn, router]);
 
     if (!isLoggedIn) {
     return (
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <StatusBar style="auto" />
         <ThemedView className="flex-1 justify-center items-center">
+          <ImageBackground 
+          source={require('./')} 
+          style={{ flex: 1,width: '100%', height: '100%' }}/>
           <ThemedText>Welcome To Health Care</ThemedText>
           <ThemedText>Make your life better</ThemedText>
           <Link className="text-xl font-bold text-red-600" href="../(tabs)">Go To Home Page!</Link>
@@ -61,17 +69,12 @@ export default function LandingPage() {
           >
             <ThemedText style={styles.buttonText}>Register</ThemedText>
           </TouchableOpacity>
-
+          
         </ThemedView>
       </ThemeProvider>
     );
   }
 
-  if (isLoggedIn) {
-    // Navigate to the home page if the user is logged in
-    return <Redirect href="../(tabs)" />;
-  }
-    
 }
 
 const styles = StyleSheet.create({

@@ -44,54 +44,6 @@ const HeartRateMonitor = () => {
 };
  
 
-//   const processPPGSignal = (frames: any[]) => {
-//     const peaks = detectPeaks(frames);
-//     const heartRateValue = (peaks / 15) * 60; // Calculate per minute heart rate
-//     setHeartRate(heartRateValue);
-//   };
-
-//   const detectPeaks = (frames: any[]): number => {
-//     // Implement peak detection logic
-//     return frames.length / 2; // Dummy implementation
-//   };
-
-//   const startHeartRateMeasurement = async () => {
-//     if (cameraRef.current) {
-//       const frames: any[] = [];
-//       const startTime = Date.now();
-
-//       const captureFrames = async () => {
-//         if (Date.now() - startTime < 15000) {
-//           const frame = await cameraRef.current.takePictureAsync(); // Use takePictureAsync
-//           frames.push(frame);
-//           requestAnimationFrame(captureFrames);
-//         } else {
-//           processPPGSignal(frames);
-//         }
-//       };
-
-//       captureFrames();
-//     }
-//   };
-
-//   if (hasPermission === null) {
-//     return <Text style={styles.text}>Requesting for camera permission</Text>;
-//   }
-//   if (hasPermission === false) {
-//     return <Text style={styles.text}>No access to camera</Text>;
-//   }
-
-//   return (
-//     <View style={styles.container}>
-//       {isFocused && (
-//         <Camera ref={cameraRef} style={styles.camera} type={CameraType.back} />
-//       )}
-//       <Button title="Start Measurement" onPress={startHeartRateMeasurement} />
-//       {heartRate && <Text style={styles.text}>Estimated Heart Rate: {heartRate.toFixed(0)} BPM</Text>}
-//     </View>
-//   );
-
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
