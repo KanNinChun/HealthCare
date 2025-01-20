@@ -8,6 +8,10 @@ import { ThemedView } from '../../componemts/ThemedView';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import axios from 'axios';
+import { NewsDataType } from '../../constants/news'
+import { API_URL } from "@env"
+import NewsScreen from './NewsScreen';
 
 interface User {
   id: number;
@@ -27,12 +31,14 @@ const openDatabase = async () => {
   }
 }
 export default function HomeScreen() {
-  const {top: safeTop} = useSafeAreaInsets();
+  const { top: safeTop } = useSafeAreaInsets();
   const colorScheme = useColorScheme();
   const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer; //獲取當前主題顏色
   const [username, setUsername] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [News, setNews] = useState<NewsDataType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchUsername = async () => {
@@ -60,6 +66,25 @@ export default function HomeScreen() {
     };
     fetchUsername();
   }, []);
+
+
+  useEffect(() => {
+    getNews();
+  }, []);
+
+  const getNews = async () => {
+    try {
+      const respond = await axios.get(API_URL);
+      if (respond && respond.data) {
+
+        setNews(respond.data.results);
+        setIsLoading(false);
+      }
+    }
+    catch (error: any) {
+      console.error('Error fetching news:', error.message);
+    }
+  }
   if (loading) {
     return (
       <ThemedView style={styles.container}>
@@ -68,15 +93,16 @@ export default function HomeScreen() {
     );
   }
   return (
-    <ScrollView style={{ backgroundColor: themeContainerStyle.backgroundColor }}>
-      <ThemedView style={{ paddingTop: safeTop , paddingLeft: 5}}>
+    <ThemedView>
+      <ThemedView style={{ paddingTop: safeTop, paddingLeft: 5 }}>
         <ThemedText type='subtitle'>歡迎回來,</ThemedText>
         <ThemedText type='username'>{username}</ThemedText>
-        <TouchableOpacity style={[styles.button, { width: '60%', alignSelf: 'center' }]}  onPress={() => router.push('../componemts/screens/HeartRateScreen')}>
-          <ThemedText style={styles.buttonText}>Check Heart Rate!</ThemedText>
-        </TouchableOpacity>
+        {isLoading ? (
+          <ActivityIndicator size={'large'} />) : (
+          <NewsScreen newsList={News} />
+        )} 
       </ThemedView>
-    </ScrollView>
+    </ThemedView>
   );
 }
 

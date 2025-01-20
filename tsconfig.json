@@ -8,11 +8,17 @@
       ]
     }
   },
+  "typeRoots": [
+    "./types"
+  ],
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
+  ],
+  "files": [
+    "env.d.ts",
   ]
 }
