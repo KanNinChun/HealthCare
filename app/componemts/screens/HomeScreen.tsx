@@ -10,7 +10,6 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import axios from 'axios';
 import { NewsDataType } from '../../constants/news'
-import { API_URL } from "@env"
 import NewsScreen from './NewsScreen';
 
 interface User {
@@ -74,7 +73,12 @@ export default function HomeScreen() {
 
   const getNews = async () => {
     try {
-      const respond = await axios.get(API_URL);
+      const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+      if (!apiUrl) {
+        console.error('API URL is not defined');
+        return;
+      }
+      const respond = await axios.get(apiUrl);
       if (respond && respond.data) {
 
         setNews(respond.data.results);
@@ -101,6 +105,9 @@ export default function HomeScreen() {
           <ActivityIndicator size={'large'} />) : (
           <NewsScreen newsList={News} />
         )} 
+               <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/HeartRateScreen')}>
+                  <ThemedText style={styles.buttonText}>Go to HeartRateScreen</ThemedText>
+                </TouchableOpacity>
       </ThemedView>
     </ThemedView>
   );

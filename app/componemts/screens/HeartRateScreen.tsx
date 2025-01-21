@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Button, StyleSheet,TouchableOpacity } from 'react-native';
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import {FlashMode, CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
 
 const HeartRateMonitor = () => {
@@ -8,8 +8,7 @@ const HeartRateMonitor = () => {
   const [heartRate, setHeartRate] = useState<number | null>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>('back');
-  const isFocused = useIsFocused();
-
+  const isFocused = 'on'
   if (!permission) {
     // Camera permissions are still loading.
     return <View />;
@@ -32,17 +31,60 @@ const HeartRateMonitor = () => {
 
   return (
     <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing}>
+      <CameraView style={styles.camera} facing={facing} enableTorch={true}> {/* enableTorch == flashing light on all the time*/}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
             <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> 
         </View>
       </CameraView>
     </View>
   );
 };
  
+
+//   const processPPGSignal = (frames: any[]) => {
+//     const peaks = detectPeaks(frames);
+//     const heartRateValue = (peaks / 15) * 60; // Calculate per minute heart rate
+//     setHeartRate(heartRateValue);
+//   };
+
+//   const detectPeaks = (frames: any[]): number => {
+//     // Implement peak detection logic
+//     return frames.length / 2; // Dummy implementation
+//   };
+
+//   const startHeartRateMeasurement = async () => {
+//     if (cameraRef.current) {
+//       const frames: any[] = [];
+//       const startTime = Date.now();
+
+//       const captureFrames = async () => {
+//         if (Date.now() - startTime < 15000) {
+//           const frame = await cameraRef.current.takePictureAsync(); // Use takePictureAsync
+//           frames.push(frame);
+//           requestAnimationFrame(captureFrames);
+//         } else {
+//           processPPGSignal(frames);
+//         }
+//       };
+
+//       captureFrames();
+//     }
+//   };
+
+
+
+//   return (
+//     <View style={styles.container}>
+//       {isFocused && (
+//         <Camera ref={cameraRef} style={styles.camera} type={CameraType.back} />
+//       )}
+//       <Button title="Start Measurement" onPress={startHeartRateMeasurement} />
+//       {heartRate && <Text style={styles.text}>Estimated Heart Rate: {heartRate.toFixed(0)} BPM</Text>}
+//     </View>
+//   );
+
 
 const styles = StyleSheet.create({
     container: {
@@ -73,9 +115,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#007bff',
-    padding: 10,
+    padding: 5,
     borderRadius: 5,
-    marginTop: 10,
   },
   buttonText: {
     color: 'white',
@@ -106,12 +147,11 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     backgroundColor: 'transparent',
-    margin: 64,
+    margin: 0,
   },
 });
 
 // Exporting the component
 export default HeartRateMonitor;
-
