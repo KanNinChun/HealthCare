@@ -24,6 +24,12 @@ export default function _layout() {
             <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
             <Stack.Screen name="(auth)/register" options={{ headerShown: false }}/>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }}/>
+            <Stack.Screen name="componemts/screens/NewsScreen" options={{ headerShown: false }}/>
+            <Stack.Screen name="componemts/screens/HomeScreen" options={{ headerShown: false }}/>
+            <Stack.Screen name="componemts/screens/HeartRateScreen" options={{ headerShown: false }}/>
+            <Stack.Screen name="componemts/screens/ChatRoomScreen" options={{ headerShown: false }}/>
+            <Stack.Screen name="componemts/screens/HealthInfoScreen" options={{ headerShown: false }}/>
+            <Stack.Screen name="componemts/screens/SettingScreen" options={{ headerShown: false }}/>
         </Stack>
     </SQLiteProvider>
   )
