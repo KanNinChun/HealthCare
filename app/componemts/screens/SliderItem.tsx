@@ -2,7 +2,7 @@ import { Dimensions, StyleSheet, Image, Share, View } from 'react-native'
 import React from 'react'
 import { NewsDataType } from '@/app/constants/news'
 import { ThemedView } from '../ThemedView'
-import { ThemedText } from '../ThemedText'
+import ThemedText from '../ThemedText'
 import { SharedValue } from 'react-native-reanimated'
 import { LinearGradient } from 'expo-linear-gradient'
 type Props = {

@@ -3,7 +3,7 @@ import { View, ScrollView, TouchableOpacity, StyleSheet, Alert } from 'react-nat
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from '../../hooks/useColorScheme';
-import { ThemedText } from '../../componemts/ThemedText';
+import ThemedText from '../../componemts/ThemedText';
 import { ThemedView } from '../../componemts/ThemedView';
 
 

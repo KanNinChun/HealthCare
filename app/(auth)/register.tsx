@@ -14,7 +14,7 @@ import { Ionicons } from '@expo/vector-icons'; // Import icon library
 import { genSaltSync, hashSync } from "bcrypt-ts";
 import 'react-native-get-random-values';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { ThemedText } from '../componemts/ThemedText';
+import  ThemedText  from '../componemts/ThemedText';
 import { ThemedView } from '../componemts/ThemedView';
 import { useColorScheme } from '../hooks/useColorScheme';
 

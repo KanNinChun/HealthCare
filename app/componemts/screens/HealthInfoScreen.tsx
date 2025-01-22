@@ -2,7 +2,7 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Ima
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ThemedView } from '../ThemedView';
-import { ThemedText } from '../ThemedText';
+import  ThemedText  from '../ThemedText';
 import { router } from 'expo-router';
 import { useColorScheme } from '@/app/hooks/useColorScheme';
 

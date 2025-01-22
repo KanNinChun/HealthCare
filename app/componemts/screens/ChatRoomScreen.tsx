@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import TypingIndicator from '../TypingIndicator';
 import OpenAI from 'openai';
 import { ThemedView } from '../ThemedView';
-import { ThemedText } from '../ThemedText';
+import ThemedText from '../ThemedText';
 import { useColorScheme } from '../../hooks/useColorScheme';
 
 interface Message {
@@ -30,9 +30,15 @@ export default function ChatRoomScreen() {
 
   const callOpenAI = async (messages: Message[]) => {
     try {
+      // Ensure messages have proper role/content structure
+      const formattedMessages = messages.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
+      
       const completion = await openai.chat.completions.create({
         model: 'deepseek-chat',
-        messages: messages,
+        messages: formattedMessages,
       });
       return completion.choices[0].message.content;
     } catch (error) {
@@ -45,27 +51,47 @@ export default function ChatRoomScreen() {
     if (input.trim()) {
       const userMessage: Message = { role: 'user', content: input };
       const updatedMessages = [...messages, userMessage];
+      
+      // Update state and storage atomically
       setMessages(updatedMessages);
-      setInput('');
       await AsyncStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
       
+      setInput('');
       setIsTyping(true);
-      const gptResponse = await callOpenAI(updatedMessages);
-      setIsTyping(false);
       
-      const assistantMessage: Message = { role: 'assistant', content: gptResponse || 'No response from DeepSeek.' };
-      setMessages((prev) => [...prev, assistantMessage]);
-      await AsyncStorage.setItem('chatMessages', JSON.stringify([...updatedMessages, assistantMessage]));
+      try {
+        const gptResponse = await callOpenAI(updatedMessages);
+        const assistantMessage: Message = { role: 'assistant', content: gptResponse || 'No response from DeepSeek.' };
+        
+        // Update state and storage atomically
+        setMessages(prev => {
+          const newMessages = [...prev, assistantMessage];
+          AsyncStorage.setItem('chatMessages', JSON.stringify(newMessages));
+          return newMessages;
+        });
+      } catch (error) {
+        console.error('Error processing message:', error);
+      } finally {
+        setIsTyping(false);
+      }
     }
   };
 
   useEffect(() => {
     const loadMessages = async () => {
-      const storedMessages = await AsyncStorage.getItem('chatMessages');
-      if (storedMessages) {
-        setMessages(JSON.parse(storedMessages));
+      try {
+        const storedMessages = await AsyncStorage.getItem('chatMessages');
+        if (storedMessages) {
+          const parsedMessages = JSON.parse(storedMessages);
+          if (Array.isArray(parsedMessages)) {
+            setMessages(parsedMessages);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading messages:', error);
       }
     };
+    
     loadMessages();
   }, []);
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { ThemedView } from '../ThemedView';
-import { ThemedText } from '../ThemedText';
+import ThemedText  from '../ThemedText';
 import { useNavigation } from '@react-navigation/native';
 
 const BloodSugarScreen = () => {
