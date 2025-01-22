@@ -21,16 +21,16 @@ const HealthInfoScreen = () => {
 
 
 
-                    <TouchableOpacity style={articleButtonthemeContainerStyle} onPress={() => {/* Navigate to Blood Pressure */ }}>
+                    <TouchableOpacity style={articleButtonthemeContainerStyle} onPress={() => router.push('/componemts/screens/BloodPressureScreen') }>
                         <ThemedText>血壓</ThemedText>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={articleButtonthemeContainerStyle} onPress={() => {/* Navigate to Blood Sugar */ }}>
+                    <TouchableOpacity style={articleButtonthemeContainerStyle} onPress={() => router.push('/componemts/screens/BloodSugarScreen') }>
                         <ThemedText>血糖</ThemedText>
                     </TouchableOpacity>
 
 
-                    <TouchableOpacity style={articleButtonthemeContainerStyle} onPress={() => {/* Navigate to Weight Management */ }}>
+                    <TouchableOpacity style={articleButtonthemeContainerStyle} onPress={() => router.push('/componemts/screens/WeightManagementScreen')  }>
                         <ThemedText>體重管理</ThemedText>
                     </TouchableOpacity>
 
@@ -42,13 +42,13 @@ const HealthInfoScreen = () => {
             <View style={styles.tipsContainer}>
                 <ThemedText style={styles.sectionHeader}>健康貼士</ThemedText>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    <TouchableOpacity style={TipsButtonthemeContainerStyle} onPress={() => {/* Navigate to Tip 1 */ }}>
+                    <TouchableOpacity style={TipsButtonthemeContainerStyle} onPress={() => router.push('/componemts/screens/HeartHealthScreen')}>
                         <ThemedText>心臟健康</ThemedText>
                     </TouchableOpacity>
-                    <TouchableOpacity style={TipsButtonthemeContainerStyle} onPress={() => {/* Navigate to Tip 2 */ }}>
+                    <TouchableOpacity style={TipsButtonthemeContainerStyle} onPress={() => router.push('/componemts/screens/StressReductionScreen')}>
                         <ThemedText>減輕壓力</ThemedText>
                     </TouchableOpacity>
-                    <TouchableOpacity style={TipsButtonthemeContainerStyle} onPress={() => {/* Navigate to Tip 3 */ }}>
+                    <TouchableOpacity style={TipsButtonthemeContainerStyle} onPress={() => router.push('/componemts/screens/HealthyEatingScreen')}>
                         <ThemedText>健康飲食</ThemedText>
                     </TouchableOpacity>
                 </ScrollView>
