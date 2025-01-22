@@ -6,6 +6,7 @@ import { NewsDataType } from '@/app/constants/news'
 import SliderItem from './SliderItem'
 import Animated, { useAnimatedRef, useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
 
+//https://newsdata.io/
 type Props = {
   newsList: Array<NewsDataType>
 }

@@ -1,30 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import TypingIndicator from '../TypingIndicator';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
-  apiKey: process.env.EXPO_PUBLIC_OPEN_AI_API_KEY,
+  baseURL: 'https://api.deepseek.com',
+  apiKey: process.env.EXPO_PUBLIC_DEEPSEEK_API_KEY,
 });
 
-const API_URL = 'https://api.openai.com/v1/chat/completions';
-
 export default function ChatRoomScreen() {
+  const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<{ id: string; text: string; sender: string }[]>([]);
   const [input, setInput] = useState('');
 
   const callOpenAI = async (userMessage: string) => {
     try {
       const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'deepseek-chat',
         messages: [
-          { role: 'user', content: userMessage },
+          { role: 'assistant', content: userMessage },
         ],
       });
       return completion.choices[0].message.content;
     } catch (error) {
-      console.error('Error calling OpenAI API:', error);
-      return 'Error retrieving response from OpenAI.';
+      console.error('Error calling DeepSeek API:', error);
+      return 'Error retrieving response from DeepSeek.';
     }
   };
 
@@ -35,9 +36,10 @@ export default function ChatRoomScreen() {
       setMessages(updatedMessages);
       setInput('');
       await AsyncStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
-
+      setIsTyping(true); // Show typing indicator
       const gptMessage = await callOpenAI(input);
-      const gptResponseMessage = { id: Date.now().toString(), text: gptMessage || 'No response from OpenAI.', sender: 'openai' };
+      setIsTyping(false); // Stop typing indicator after receiving response
+      const gptResponseMessage = { id: Date.now().toString(), text: gptMessage || 'No response from DeepSeek.', sender: 'DeepSeek' };
       setMessages((prevMessages) => [...prevMessages, gptResponseMessage]);
     }
   };
@@ -63,13 +65,14 @@ export default function ChatRoomScreen() {
       <FlatList
         data={messages}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
+        renderItem={({ item }: { item: { id: string; text: string; sender: string } }) => (
           <Text style={item.sender === 'user' ? styles.userMessage : styles.openAIMessage}>
             {item.text}
           </Text>
         )}
         style={styles.messageList}
       />
+      {isTyping && <TypingIndicator />}
       <TextInput
         style={styles.input}
         value={input}
@@ -82,7 +85,7 @@ export default function ChatRoomScreen() {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
