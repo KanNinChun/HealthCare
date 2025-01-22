@@ -1,7 +1,7 @@
 import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import { ThemedView } from '../ThemedView'
-import { ThemedText } from '../ThemedText'
+import ThemedText from '../ThemedText'
 import { NewsDataType } from '@/app/constants/news'
 import SliderItem from './SliderItem'
 import Animated, { useAnimatedRef, useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';

@@ -8,15 +8,15 @@ export type ThemedTextProps = TextProps & {
   type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link' | 'description' | 'username';
 };
 
-export function ThemedText({
+export default function ThemedText({
   style,
   lightColor,
   darkColor,
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-  const lightColorValue = lightColor ?? '#000000'; // 如果 lightColor 未定义，则使用纯黑色
-  const darkColorValue = darkColor ?? '#ffffff'; // 如果 darkColor 未定义，则使用纯白色（假设）
+  const lightColorValue = lightColor ?? '#000000';
+  const darkColorValue = darkColor ?? '#ffffff';
   const color = useThemeColor({ light: lightColorValue, dark: darkColorValue }, 'text');
 
   return (
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   link: {
     lineHeight: 30,
     fontSize: 16,
-    color: '#d47924',  // #0a7ea4
+    color: '#d47924',
   },
   description: {
     top: -220,

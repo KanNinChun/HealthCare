@@ -14,7 +14,7 @@ import { useRouter } from 'expo-router';
 import { compare, hash } from 'bcrypt-ts';
 import { Ionicons } from '@expo/vector-icons'; // Import icon library
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { ThemedText } from '../componemts/ThemedText';
+import  ThemedText  from '../componemts/ThemedText';
 import { ThemedView } from '../componemts/ThemedView';
 import { useColorScheme } from '../hooks/useColorScheme';
 

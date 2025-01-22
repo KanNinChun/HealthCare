@@ -1,6 +1,6 @@
 import { View,StyleSheet, TouchableOpacity, ActivityIndicator , ImageBackground} from "react-native";
 import { useColorScheme } from './hooks/useColorScheme';
-import { ThemedText } from './componemts/ThemedText';
+import ThemedText from './componemts/ThemedText';
 import { ThemedView } from './componemts/ThemedView';
 import { useRouter, Link, Redirect, Stack } from 'expo-router';
 import "../global.css"

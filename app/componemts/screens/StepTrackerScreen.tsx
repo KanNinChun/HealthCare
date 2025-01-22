@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ThemedView } from '../ThemedView';
-import { ThemedText } from '../ThemedText';
+import ThemedText from '../ThemedText';
 import { DeviceMotion } from 'expo-sensors';
 import * as Location from 'expo-location';
 import type { Subscription } from 'expo-sensors/build/DeviceSensor';

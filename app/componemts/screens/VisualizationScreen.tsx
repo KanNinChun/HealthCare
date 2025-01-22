@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { ThemedText } from '../ThemedText'
+import ThemedText from '../ThemedText'
 import { router, useRouter } from 'expo-router';
 
 export default function VisualizationScreen() {
