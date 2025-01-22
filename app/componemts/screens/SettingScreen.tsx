@@ -27,9 +27,7 @@ export default function SettingScreen() {
     <ScrollView style={{ backgroundColor: themeContainerStyle.backgroundColor }}>
       <ThemedView style={styles.container}>
         <ThemedText type='subtitle'>Settings</ThemedText>
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/ChatRoomScreen')}>
-          <ThemedText style={styles.buttonText}>Go to Chat Room</ThemedText>
-        </TouchableOpacity>
+
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <ThemedText style={styles.buttonText}>Logout</ThemedText>
         </TouchableOpacity>
