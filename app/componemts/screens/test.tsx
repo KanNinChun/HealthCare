@@ -86,7 +86,7 @@ const test = () => {
 
                     if (isCounting &&
                         Math.abs(y - lastY) > threshold &&
-                        (timeStamp - lastTimeStamp > 500)
+                        (timeStamp - lastTimeStamp > 800)
                     ) {
                         setLastY(y);
                         setLastTimeStamp(timeStamp);
@@ -113,7 +113,7 @@ const test = () => {
 
                 <ThemedView style={styles.Caloriescontainer}>
                     <ThemedText>Estimate Calories Burned: </ThemedText>
-                    <ThemedText style={styles.caloriesText}>{EstimatedCaloriesBurned.toFixed(2)} kcal</ThemedText>
+                    <ThemedText style={styles.caloriesText}>{EstimatedCaloriesBurned.toFixed(1)} kcal</ThemedText>
                 </ThemedView>
             </ThemedView>
             <ThemedView style={styles.buttonContainer}>
