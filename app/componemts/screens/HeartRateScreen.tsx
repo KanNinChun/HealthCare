@@ -3,6 +3,8 @@ import { View, Text, Button, StyleSheet,TouchableOpacity } from 'react-native';
 import {FlashMode, CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useIsFocused } from '@react-navigation/native';
 
+// https://docs.expo.dev/versions/latest/sdk/camera/#enabletorch
+
 const HeartRateMonitor = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [heartRate, setHeartRate] = useState<number | null>(null);
