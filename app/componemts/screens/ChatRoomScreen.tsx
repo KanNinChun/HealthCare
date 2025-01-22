@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
+import { View, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TypingIndicator from '../TypingIndicator';
@@ -8,6 +8,11 @@ import { ThemedView } from '../ThemedView';
 import { ThemedText } from '../ThemedText';
 import { useColorScheme } from '../../hooks/useColorScheme';
 
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 const openai = new OpenAI({
   baseURL: 'https://api.deepseek.com',
   apiKey: process.env.EXPO_PUBLIC_DEEPSEEK_API_KEY,
@@ -15,21 +20,19 @@ const openai = new OpenAI({
 
 export default function ChatRoomScreen() {
   const [isTyping, setIsTyping] = useState(false);
-  const [messages, setMessages] = useState<{ id: string; text: string; sender: string }[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
 
-  const colorScheme = useColorScheme(); // Get the current color scheme
-  const userthemeContainerStyle = colorScheme === 'light' ? styles.userlightContainer : styles.userdarkContainer; // Get current theme color
-  const airthemeContainerStyle = colorScheme === 'light' ? styles.ailightContainer : styles.aidarkContainer; // Get current theme color
-  const inputfiledthemeContainerStyle = colorScheme === 'light' ? styles.inputfiledlightContainer : styles.inputfileddarkContainer; // Get current theme color
+  const colorScheme = useColorScheme();
+  const userthemeContainerStyle = colorScheme === 'light' ? styles.userlightContainer : styles.userdarkContainer;
+  const airthemeContainerStyle = colorScheme === 'light' ? styles.ailightContainer : styles.aidarkContainer;
+  const inputfiledthemeContainerStyle = colorScheme === 'light' ? styles.inputfiledlightContainer : styles.inputfileddarkContainer;
 
-  const callOpenAI = async (userMessage: string) => {
+  const callOpenAI = async (messages: Message[]) => {
     try {
       const completion = await openai.chat.completions.create({
         model: 'deepseek-chat',
-        messages: [
-          { role: 'assistant', content: userMessage },
-        ],
+        messages: messages,
       });
       return completion.choices[0].message.content;
     } catch (error) {
@@ -40,16 +43,19 @@ export default function ChatRoomScreen() {
 
   const sendMessage = async () => {
     if (input.trim()) {
-      const newMessage = { id: Date.now().toString(), text: input, sender: 'user' };
-      const updatedMessages = [...messages, newMessage];
+      const userMessage: Message = { role: 'user', content: input };
+      const updatedMessages = [...messages, userMessage];
       setMessages(updatedMessages);
       setInput('');
       await AsyncStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
-      setIsTyping(true); // Show typing indicator
-      const gptMessage = await callOpenAI(input);
-      setIsTyping(false); // Stop typing indicator after receiving response
-      const gptResponseMessage = { id: Date.now().toString(), text: gptMessage || 'No response from DeepSeek.', sender: 'DeepSeek' };
-      setMessages((prevMessages) => [...prevMessages, gptResponseMessage]);
+      
+      setIsTyping(true);
+      const gptResponse = await callOpenAI(updatedMessages);
+      setIsTyping(false);
+      
+      const assistantMessage: Message = { role: 'assistant', content: gptResponse || 'No response from DeepSeek.' };
+      setMessages((prev) => [...prev, assistantMessage]);
+      await AsyncStorage.setItem('chatMessages', JSON.stringify([...updatedMessages, assistantMessage]));
     }
   };
 
@@ -68,28 +74,28 @@ export default function ChatRoomScreen() {
     await AsyncStorage.removeItem('chatMessages');
   };
 
-  const placeholderColor = useThemeColor({ light: '#888', dark: '#ccc' }, 'background'); // Placeholder color based on theme
+  const placeholderColor = useThemeColor({ light: '#888', dark: '#ccc' }, 'background');
 
   return (
     <ThemedView style={styles.container}>
       <ThemedText style={styles.header}>Healthcare Chatbot</ThemedText>
       <FlatList
         data={messages}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }: { item: { id: string; text: string; sender: string } }) => (
-          <ThemedText style={item.sender === 'user' ? userthemeContainerStyle : airthemeContainerStyle}>
-            {item.text}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }: { item: Message }) => (
+          <ThemedText style={item.role === 'user' ? userthemeContainerStyle : airthemeContainerStyle}>
+            {item.content}
           </ThemedText>
         )}
         style={styles.messageList}
       />
       {isTyping && <TypingIndicator />}
       <TextInput
-        style={inputfiledthemeContainerStyle} // Use dynamic input field style based on theme
+        style={inputfiledthemeContainerStyle}
         value={input}
         onChangeText={setInput}
         placeholder="Type your message..."
-        placeholderTextColor={placeholderColor} // Use dynamic placeholder color
+        placeholderTextColor={placeholderColor}
       />
       <ThemedView style={styles.buttonContainer}>
         <Button title="Send" onPress={sendMessage} />
@@ -103,30 +109,30 @@ const styles = StyleSheet.create({
   userlightContainer: {
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#d4edda',//'#d4edda', // Light green for light mode
+    backgroundColor: '#d4edda',
     marginBottom: 10,
-    alignSelf: 'flex-end', // Align to the right
+    alignSelf: 'flex-end',
   },
   userdarkContainer: {
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#c76e00', // Dark color for dark mode
+    backgroundColor: '#c76e00',
     marginBottom: 10,
-    alignSelf: 'flex-end', // Align to the right
+    alignSelf: 'flex-end',
   },
   ailightContainer: {
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#f1f1f1', // Light gray for light mode
+    backgroundColor: '#f1f1f1',
     marginBottom: 10,
-    alignSelf: 'flex-start', // Align to the left
+    alignSelf: 'flex-start',
   },
   aidarkContainer: {
     padding: 10,
     borderRadius: 5,
-    backgroundColor: '#444444', // Darker gray for dark mode
+    backgroundColor: '#444444',
     marginBottom: 10,
-    alignSelf: 'flex-start', // Align to the left
+    alignSelf: 'flex-start',
   },
   inputfiledlightContainer: {
     borderWidth: 1,
@@ -142,7 +148,8 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     color: '#fff',
-  }, container: {
+  },
+  container: {
     flex: 1,
     padding: 20,
   },
@@ -156,13 +163,6 @@ const styles = StyleSheet.create({
   messageList: {
     flex: 1,
     marginBottom: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
