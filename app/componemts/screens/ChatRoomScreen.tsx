@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
+import { useThemeColor } from '../../hooks/useThemeColor';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TypingIndicator from '../TypingIndicator';
 import OpenAI from 'openai';
+import { ThemedView } from '../ThemedView';
+import { ThemedText } from '../ThemedText';
+import { useColorScheme } from '../../hooks/useColorScheme';
 
 const openai = new OpenAI({
   baseURL: 'https://api.deepseek.com',
@@ -14,6 +18,11 @@ export default function ChatRoomScreen() {
   const [messages, setMessages] = useState<{ id: string; text: string; sender: string }[]>([]);
   const [input, setInput] = useState('');
 
+  const colorScheme = useColorScheme(); // Get the current color scheme
+  const userthemeContainerStyle = colorScheme === 'light' ? styles.userlightContainer : styles.userdarkContainer; // Get current theme color
+  const airthemeContainerStyle = colorScheme === 'light' ? styles.ailightContainer : styles.aidarkContainer; // Get current theme color
+  const inputfiledthemeContainerStyle = colorScheme === 'light' ? styles.inputfiledlightContainer : styles.inputfileddarkContainer; // Get current theme color
+  
   const callOpenAI = async (userMessage: string) => {
     try {
       const completion = await openai.chat.completions.create({
@@ -59,62 +68,94 @@ export default function ChatRoomScreen() {
     await AsyncStorage.removeItem('chatMessages');
   };
 
+  const placeholderColor = useThemeColor({ light: '#888', dark: '#ccc' }, 'background'); // Placeholder color based on theme
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Healthcare Chatbot</Text>
+    <ThemedView style={styles.container}>
+      <ThemedText style={styles.header}>Healthcare Chatbot</ThemedText>
       <FlatList
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={({ item }: { item: { id: string; text: string; sender: string } }) => (
-          <Text style={item.sender === 'user' ? styles.userMessage : styles.openAIMessage}>
+          <ThemedText style={item.sender === 'user' ? userthemeContainerStyle : airthemeContainerStyle}>
             {item.text}
-          </Text>
+          </ThemedText>
         )}
         style={styles.messageList}
       />
       {isTyping && <TypingIndicator />}
       <TextInput
-        style={styles.input}
+        style={inputfiledthemeContainerStyle} // Use dynamic input field style based on theme
         value={input}
         onChangeText={setInput}
         placeholder="Type your message..."
+        placeholderTextColor={placeholderColor} // Use dynamic placeholder color
       />
-      <View style={styles.buttonContainer}>
+      <ThemedView style={styles.buttonContainer}>
         <Button title="Send" onPress={sendMessage} />
         <Button title="Clear" onPress={clearChat} />
-      </View>
-    </View>
+      </ThemedView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  userlightContainer: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#d4edda',//'#d4edda', // Light green for light mode
+    marginBottom: 10,
+    alignSelf: 'flex-end', // Align to the right
+  },
+  userdarkContainer: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#c76e00', // Dark color for dark mode
+    marginBottom: 10,
+    alignSelf: 'flex-end', // Align to the right
+  },
+  ailightContainer: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#f1f1f1', // Light gray for light mode
+    marginBottom: 10,
+    alignSelf: 'flex-start', // Align to the left
+  },
+  aidarkContainer: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#444444', // Darker gray for dark mode
+    marginBottom: 10,
+    alignSelf: 'flex-start', // Align to the left
+  },
+  inputfiledlightContainer:{
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  inputfileddarkContainer:{
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    color: '#fff',
+  },  container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    marginTop: 20,
+    textAlign: 'center',
   },
   messageList: {
     flex: 1,
     marginBottom: 20,
-  },
-  openAIMessage: {
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: '#f1f1f1',
-    marginBottom: 10,
-    alignSelf: 'flex-start', // Align to the left
-  },
-  userMessage: {
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: '#d4edda', // Light green color
-    marginBottom: 10,
-    alignSelf: 'flex-end', // Align to the right
   },
   input: {
     borderWidth: 1,
