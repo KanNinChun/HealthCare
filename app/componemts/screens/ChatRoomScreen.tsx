@@ -22,7 +22,7 @@ export default function ChatRoomScreen() {
   const userthemeContainerStyle = colorScheme === 'light' ? styles.userlightContainer : styles.userdarkContainer; // Get current theme color
   const airthemeContainerStyle = colorScheme === 'light' ? styles.ailightContainer : styles.aidarkContainer; // Get current theme color
   const inputfiledthemeContainerStyle = colorScheme === 'light' ? styles.inputfiledlightContainer : styles.inputfileddarkContainer; // Get current theme color
-  
+
   const callOpenAI = async (userMessage: string) => {
     try {
       const completion = await openai.chat.completions.create({
@@ -128,21 +128,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: 'flex-start', // Align to the left
   },
-  inputfiledlightContainer:{
+  inputfiledlightContainer: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
   },
-  inputfileddarkContainer:{
+  inputfileddarkContainer: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
     color: '#fff',
-  },  container: {
+  }, container: {
     flex: 1,
     padding: 20,
   },
