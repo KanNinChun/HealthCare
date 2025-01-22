@@ -27,9 +27,6 @@ export default function SettingScreen() {
     <ScrollView style={{ backgroundColor: themeContainerStyle.backgroundColor }}>
       <ThemedView style={styles.container}>
         <ThemedText type='subtitle'>Settings</ThemedText>
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/StepTrackerScreen')}>
-          <ThemedText>go step</ThemedText>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <ThemedText style={styles.buttonText}>Logout</ThemedText>
         </TouchableOpacity>

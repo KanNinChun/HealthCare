@@ -104,10 +104,19 @@ export default function HomeScreen() {
         {isLoading ? (
           <ActivityIndicator size={'large'} />) : (
           <NewsScreen newsList={News} />
-        )} 
-               <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/HeartRateScreen')}>
-                  <ThemedText style={styles.buttonText}>Go to HeartRateScreen</ThemedText>
-                </TouchableOpacity>
+        )}
+
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/HeartRateScreen')}>
+          <ThemedText style={styles.buttonText}>心跳檢測</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/StepTrackerScreen')}>
+          <ThemedText style={styles.buttonText}>步數追蹤</ThemedText>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/test')}>
+          <ThemedText style={styles.buttonText}>步數追蹤Test</ThemedText>
+        </TouchableOpacity>
+
       </ThemedView>
     </ThemedView>
   );
