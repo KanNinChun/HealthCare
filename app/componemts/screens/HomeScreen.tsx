@@ -97,8 +97,8 @@ export default function HomeScreen() {
     );
   }
   return (
-    <ThemedView>
-      <ThemedView style={{ paddingTop: safeTop, paddingLeft: 5 }}>
+    <ThemedView style={styles.container}>
+      <ThemedView style={{ paddingTop: safeTop, paddingLeft: 4 }}>
         <ThemedText type='subtitle'>歡迎回來,</ThemedText>
         <ThemedText type='username'>{username}</ThemedText>
         {isLoading ? (
@@ -116,8 +116,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   lightContainer: {
     color: '#191919',
