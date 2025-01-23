@@ -66,7 +66,7 @@ const AddRecord = () => {
         {showDatePicker && (
           <DateTimePicker
             value={date}
-            mode="datetime"
+            mode="date"
             display="default"
             onChange={(event: DateTimePickerEvent, selectedDate?: Date) => {
               if (event.type === 'set' && selectedDate) {
