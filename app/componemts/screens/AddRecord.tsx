@@ -39,10 +39,10 @@ const AddRecord = () => {
   };
 
   const getStatusForValue = (value: number): string => {
-    if (value < 4.0) return 'Low';
-    if (value <= 5.5) return 'Normal';
-    if (value <= 7.0) return 'High';
-    return 'Dangerous';
+    if (value < 4.0) return '低血糖';
+    if (value <= 5.5) return '正常';
+    if (value <= 7.0) return '高血糖';
+    return '危險';
   };
 
   return (
@@ -69,10 +69,10 @@ const AddRecord = () => {
             mode="datetime"
             display="default"
             onChange={(event: DateTimePickerEvent, selectedDate?: Date) => {
-              setShowDatePicker(false);
-              if (selectedDate) {
+              if (event.type === 'set' && selectedDate) {
                 setDate(selectedDate);
               }
+              setShowDatePicker(false);
             }}
           />
         )}
@@ -87,7 +87,7 @@ const AddRecord = () => {
           maximumValue={35}
           step={0.1}
           value={value}
-          onValueChange={setValue}
+          onSlidingComplete={setValue}
           minimumTrackTintColor="#007AFF"
           maximumTrackTintColor="#8E8E93"
         />
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    paddingTop: 50,
   },
   section: {
     marginBottom: 30,
