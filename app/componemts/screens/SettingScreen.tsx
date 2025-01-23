@@ -15,7 +15,7 @@ export default function SettingScreen() {
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem('userToken');
+      await AsyncStorage.removeItem('userToken'); // 移除憑證
       console.log('User logged out');
       router.replace('../(auth)/login');
     } catch (error) {
@@ -26,9 +26,9 @@ export default function SettingScreen() {
   return (
     <ScrollView style={{ backgroundColor: themeContainerStyle.backgroundColor }}>
       <ThemedView style={styles.container}>
-        <ThemedText type='subtitle'>Settings</ThemedText>
+        <ThemedText type='subtitle'>設定</ThemedText>
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
-          <ThemedText style={styles.buttonText}>Logout</ThemedText>
+          <ThemedText style={styles.buttonText}>登出</ThemedText>
         </TouchableOpacity>
       </ThemedView>
     </ScrollView>

@@ -25,7 +25,7 @@ const  NewsScreen = ({newsList}: Props) => {
 
   return (
    <ThemedView style={styles.container}>
-      <ThemedText style={styles.title}>News</ThemedText>
+      <ThemedText style={styles.title}>新聞</ThemedText>
       <ThemedView style={styles.slideWrapper}>
         <Animated.FlatList
         ref={ref} 
@@ -47,10 +47,11 @@ export default NewsScreen
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10
+    marginTop: 20,
+    marginBottom: 20
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
     marginBottom: 10,
     marginLeft: 20,

@@ -41,12 +41,12 @@ const TabIcon : React.FC<TabIconProps> = ({ iconFamily, iconName, color, name, f
 const styles = StyleSheet.create({
 
     focusedText: {
-        fontWeight: '600', // semi bold
-        fontSize: 13, // normal size for focused
+        fontWeight: '600', 
+        fontSize: 13, 
     },
     unfocusedText: {
-        fontWeight: 'normal', // or use a specific font family if required
-        fontSize: 12, // smaller size for unfocused
+        fontWeight: 'normal', 
+        fontSize: 12, 
     }
 });
 

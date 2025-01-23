@@ -26,8 +26,9 @@ const SliderItem = ({ sliderItem, index, scrollX }: Props) => {
                 </View>
 
                 <ThemedText style={styles.content}
-                        numberOfLines={3} // 限制文本显示的行数
-                        ellipsizeMode='tail' // 文本显示省略号
+                        numberOfLines={3} // 限制文本顯示行數
+                        ellipsizeMode='tail' // 超出部分顯示省略號
+                        adjustsFontSizeToFit //自動調整字體大小以便填滿寬度
                     >{sliderItem.title}
                     </ThemedText>
             </LinearGradient>
@@ -46,8 +47,8 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     content: {
-        marginTop: 10, // 添加一些间距以便更好地查看内容
-        fontSize: 14, // 添加字体大小以便更好地查看内容
+        marginTop: 10, 
+        fontSize: 14, 
         alignItems: 'center',
     },
 
