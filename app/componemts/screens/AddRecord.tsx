@@ -22,14 +22,16 @@ const AddRecord = () => {
         timestamp: date.toISOString(),
         status: getStatusForValue(value)
       };
-
+      const userId = await AsyncStorage.getItem('userToken');
+      if (!userId) return;
+      
       // Get existing records
-      const existingRecords = await AsyncStorage.getItem('bloodSugarRecords');
+      const existingRecords = await AsyncStorage.getItem(`bloodSugarRecords_${userId}`);
       const records = existingRecords ? JSON.parse(existingRecords) : [];
       
       // Add new record and save
       records.push(newRecord);
-      await AsyncStorage.setItem('bloodSugarRecords', JSON.stringify(records));
+      await AsyncStorage.setItem(`bloodSugarRecords_${userId}`, JSON.stringify(records));
       
       // Navigate back
       navigation.goBack();
