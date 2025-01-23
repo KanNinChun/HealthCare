@@ -19,6 +19,7 @@ const BloodSugarRecord = () => {
       const loadRecords = async () => {
         try {
           const stored = await AsyncStorage.getItem('bloodSugarRecords');
+         
           if (stored) setRecords(JSON.parse(stored));
         } catch (error) {
           console.error('Error loading records:', error);
@@ -171,34 +172,36 @@ const BloodSugarRecord = () => {
             />
           ) : (
             <ThemedText style={styles.noDataText}>
-              No blood sugar records available
+              沒有血糖記錄
             </ThemedText>
           )}
         </View>
-
-        {/* Record List */}
-
+          <ThemedView>
+            {
+              records.length > 0 ? (
+                < ThemedView style={styles.infocontainer}>
+                <ThemedView style={styles.infolist}>
+                  <ThemedText>血糖值</ThemedText>
+                  <ThemedText>情況</ThemedText>
+                  <ThemedText>日期</ThemedText>
+                </ThemedView>
         
-        <ThemedView style={styles.infocontainer}>
-          <ThemedView style={styles.infolist}>
-            <ThemedText>血糖值</ThemedText>
-            <ThemedText>情況</ThemedText>
-            <ThemedText>日期</ThemedText>
-          </ThemedView>
-
-          <View style={styles.recordList}>
-            {records.map((record, index) => (
-              <ThemedView key={index} style={styles.recordItem}>
-                <ThemedText style={[styles.recordValue, { color: colorNumberToHex(getColorForValue(record.value)) }]}>
-                  {record.value} mmol/L
-                </ThemedText>
-                <ThemedText style={styles.recordStatus}>{getStatus(record.value)}</ThemedText>
-                <ThemedText style={styles.recordTimestamp}>
-                  {format(new Date(record.timestamp), 'yyyy-MM-dd HH:mm')}
-                </ThemedText>
-              </ThemedView>
-            ))}
-          </View>
+                <View style={styles.recordList}>
+                  {records.map((record, index) => (
+                    <ThemedView key={index} style={styles.recordItem}>
+                      <ThemedText style={[styles.recordValue, { color: colorNumberToHex(getColorForValue(record.value)) }]}>
+                        {record.value} mmol/L
+                      </ThemedText>
+                      <ThemedText style={styles.recordStatus}>{getStatus(record.value)}</ThemedText>
+                      <ThemedText style={styles.recordTimestamp}>
+                        {format(new Date(record.timestamp), 'yyyy-MM-dd HH:mm')}
+                      </ThemedText>
+                    </ThemedView>
+                  ))}
+                </View>
+            </ThemedView>
+              ) : null
+            }
           </ThemedView>
       </ScrollView>
 
@@ -293,10 +296,11 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   noDataText: {
+    paddingTop: 10,
     textAlign: 'center',
     marginVertical: 20,
-    fontSize: 16,
-    color: '#666',
+    fontSize: 24,
+    color: '#949494',
   },
 });
 
