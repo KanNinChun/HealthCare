@@ -30,9 +30,31 @@ yarn-error.*
 *.pem
 
 # local env files
-.env*.local
+*/.env*.local
 
 # typescript
 *.tsbuildinfo
+
+# Gatsby
+.cache
+with-gatsby/public
+
+# Next.js
+.next
+with-nextjs/out
+
+# Native
+*/ios/Pods
+
+# Websockets
+*/backend/.env
+
+.expo
+.vscode
+node_modules
+bun.lockb
+yarn-error.log
+yarn.lock
+package-lock.json
 
 app-example
