@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons'; // Import icon library
+import { Ionicons } from '@expo/vector-icons';
 import { genSaltSync, hashSync } from "bcrypt-ts";
 import 'react-native-get-random-values';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';

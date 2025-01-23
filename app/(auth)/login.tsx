@@ -1,4 +1,3 @@
-// app/(auth)/login.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -12,7 +11,7 @@ import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { compare, hash } from 'bcrypt-ts';
-import { Ionicons } from '@expo/vector-icons'; // Import icon library
+import { Ionicons } from '@expo/vector-icons'; 
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import  ThemedText  from '../componemts/ThemedText';
 import { ThemedView } from '../componemts/ThemedView';
@@ -31,7 +30,7 @@ const openDatabase = async () => {
     db = await SQLite.openDatabaseAsync('healthcare.db');
     return db;
   } catch (error) {
-    console.error("Error while opening the database                      in login page", error);
+    console.error("Error while opening the database in login page", error);
     return null;
   }
 }

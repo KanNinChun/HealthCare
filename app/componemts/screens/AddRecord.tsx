@@ -31,7 +31,7 @@ const AddRecord = () => {
       records.push(newRecord);
       await AsyncStorage.setItem('bloodSugarRecords', JSON.stringify(records));
       
-      // Navigate back with updated data
+      // Navigate back
       navigation.goBack();
     } catch (error) {
       console.error('Error saving record:', error);

@@ -18,6 +18,7 @@ const openai = new OpenAI({
   apiKey: process.env.EXPO_PUBLIC_DEEPSEEK_API_KEY,
 });
 
+// https://api-docs.deepseek.com/zh-cn/ API文檔
 export default function ChatRoomScreen() {
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);

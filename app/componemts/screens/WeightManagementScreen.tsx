@@ -5,7 +5,7 @@ import ThemedText from '../ThemedText';
 import { useNavigation } from '@react-navigation/native';
 
 const WeightManagementScreen = () => {
-    const navigation = useNavigation(); // Initialize navigation
+    const navigation = useNavigation(); 
 
     return (
         <ThemedView style={styles.container}>
@@ -67,14 +67,14 @@ const styles = StyleSheet.create({
     },
     exitButton: {
         alignItems: 'flex-end',
-        position: 'relative', // Changed from absolute to relative
-        top: 15, // Move to the top
-        right: 0, // Move to the right
-        backgroundColor: 'transparent', // Make it transparent to see the image
+        position: 'relative', 
+        top: 15, 
+        right: 0, 
+        backgroundColor: 'transparent', 
         paddingTop: 15,
     },
     exitButtonText: {
         fontSize: 24,
-        color: 'red', // Change color as needed
+        color: 'red', 
     },
 });

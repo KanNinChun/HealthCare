@@ -75,7 +75,7 @@ export default function HomeScreen() {
     try {
       const apiUrl = process.env.EXPO_PUBLIC_API_URL;
       if (!apiUrl) {
-        console.error('API URL is not defined');
+        console.error('News API URL is not defined');
         return;
       }
       const respond = await axios.get(apiUrl);
