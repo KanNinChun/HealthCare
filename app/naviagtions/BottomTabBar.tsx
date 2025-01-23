@@ -6,14 +6,14 @@ import TabIcon from '../componemts/Icon';
 import HomeScreen from '../componemts/screens/HomeScreen';
 import SettingsScreen from '../componemts/screens/SettingScreen';
 import HealthInfoScreen from '../componemts/screens/HealthInfoScreen';
-import VisualizationScreen from '../componemts/screens/VisualizationScreen';
+import Map from '../componemts/screens/Map';
 import { useTheme } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native';
 
 export type BottomTapBar =
     {
         主頁: any,
-        數據圖表: any,
+        醫院地圖: any,
         健康資訊: any,
         設定: any,
     }
@@ -43,7 +43,7 @@ const TabsLayOut = () => {
                     },
                 }}
             >
-                <Tab.Screen name="Home" component={HomeScreen}
+                <Tab.Screen name="主頁" component={HomeScreen}
                     options={{
                         title: '主頁',
                         tabBarShowLabel: headerShown,
@@ -60,23 +60,23 @@ const TabsLayOut = () => {
                     }}
                 />
 
-                <Tab.Screen name="Visualization" component={VisualizationScreen}
+                <Tab.Screen name="醫院地圖" component={Map}
                     options={{
-                        title: '數據圖表',
+                        title: '醫院地圖',
                         headerShown: headerShown, // 隱藏Header
                         tabBarIcon: ({ color, focused }) => (
                             <TabIcon
                                 iconFamily="Ionicons"
                                 iconName="bar-chart-outline"
                                 color={color}
-                                name="數據圖表"
+                                name="醫院地圖"
                                 focused={focused}
                             />
                         )
                     }}
                 />
 
-                <Tab.Screen name="HealthInfo" component={HealthInfoScreen}
+                <Tab.Screen name="健康資訊" component={HealthInfoScreen}
                     options={{
                         title: '健康資訊',
                         headerShown: headerShown, // 隱藏Header
@@ -92,7 +92,7 @@ const TabsLayOut = () => {
                     }}
                 />
 
-                <Tab.Screen name="Settings" component={SettingsScreen}
+                <Tab.Screen name="設定" component={SettingsScreen}
                     options={{
                         title: '設定',
                         headerShown: headerShown, // 隱藏Header

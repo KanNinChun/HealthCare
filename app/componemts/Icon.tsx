@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import { AntDesign, Ionicons, Entypo, MaterialIcons, FontAwesome, FontAwesome6} from '@expo/vector-icons';
+import { AntDesign, Ionicons, Entypo, MaterialIcons, FontAwesome, FontAwesome6,Feather} from '@expo/vector-icons';
 
-type IconFamily = 'AntDesign' | 'Ionicons' | 'Entypo' | 'MaterialIcons' | 'FontAwesome' | 'FontAwesome6'
+type IconFamily = 'AntDesign' | 'Ionicons' | 'Entypo' | 'MaterialIcons' | 'FontAwesome' | 'FontAwesome6' | 'Feather'
 
 interface TabIconProps {
     iconFamily: IconFamily
@@ -19,6 +19,7 @@ const IconMap = {
     MaterialIcons,
     FontAwesome,
     FontAwesome6,
+    Feather,
 };
 
 const TabIcon : React.FC<TabIconProps> = ({ iconFamily, iconName, color, name, focused }) => {

@@ -6,12 +6,12 @@ import TabIcon from '../componemts/Icon';
 import HomeScreen from '../componemts/screens/HomeScreen'; 
 import SettingsScreen from '../componemts/screens/SettingScreen';
 import HealthInfoScreen from '../componemts/screens/HealthInfoScreen';
-import VisualizationScreen from '../componemts/screens/VisualizationScreen';
+import Map from '../componemts/screens/Map';
 
 export type TopTapBar = 
 {
     主頁: any,
-    數據圖表: any,
+    醫院地圖: any,
     健康資訊: any,
     設定: any,
 }
@@ -55,16 +55,16 @@ const TopTabBar = () => {
                     )
                 }}
             /> 
-            <Tab.Screen name="數據圖表" component={VisualizationScreen}
+            <Tab.Screen name="醫院地圖" component={Map}
                 options={{
-                    title: '數據圖表',
+                    title: '醫院地圖',
                     tabBarShowLabel: headerShown,
                     tabBarIcon: ({ color, focused }) => (
                         <TabIcon
-                            iconFamily = "Ionicons"
-                            iconName="bar-chart-outline"
+                            iconFamily = "Feather"
+                            iconName="map-pin"
                             color={color}
-                            name="數據圖表"
+                            name="醫院地圖"
                             focused={focused}
                         />
                     )

@@ -106,15 +106,11 @@ export default function HomeScreen() {
           <NewsScreen newsList={News} />
         )}
 
-    
         <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/StepTrackerScreen')}>
           <ThemedText style={styles.buttonText}>步數追蹤</ThemedText>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/BloodSugarRecord')}>
           <ThemedText style={styles.buttonText}>血糖記錄</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/test')}>
-          <ThemedText style={styles.buttonText}>test</ThemedText>
         </TouchableOpacity>
       </ThemedView>
     </ThemedView>

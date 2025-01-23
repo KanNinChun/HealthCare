@@ -38,7 +38,7 @@ export default function _layout() {
             <Stack.Screen name="componemts/screens/StepTrackerScreen" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/BloodSugarRecord" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/AddRecord" options={{ headerShown: false }}/>
-            <Stack.Screen name="componemts/screens/test" options={{ headerShown: false }}/>
+            <Stack.Screen name="componemts/screens/Map" options={{ headerShown: false }}/>
         </Stack>
     </SQLiteProvider>
   )
