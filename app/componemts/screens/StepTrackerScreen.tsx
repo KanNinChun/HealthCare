@@ -25,7 +25,7 @@ const test = () => {
 
     const startTracking = useCallback(() => {
         setIsCounting(true);
-        setStepCount(0); // Reset step count when starting
+        // Don't reset step count - let it continue from previous session
     }, []);
 
     const stopTracking = useCallback(async () => {
@@ -33,20 +33,33 @@ const test = () => {
         setShowTotalSteps(true);
         try {
             const todayKey = getTodayKey();
-            const existingData = await AsyncStorage.getItem('stepHistory');
+            const userId = await AsyncStorage.getItem('userToken');
+            if (!userId) return;
+            
+            const existingData = await AsyncStorage.getItem(`stepHistory_${userId}`);
             const updatedHistory = existingData ? JSON.parse(existingData) : {};
 
-            const previousSteps = updatedHistory[todayKey] || 0;
-            updatedHistory[todayKey] = previousSteps + stepCount;
-            await AsyncStorage.setItem('stepHistory', JSON.stringify(updatedHistory));
+            // Get current steps for today
+            const currentSteps = updatedHistory[todayKey] || 0;
+            
+            // Add new steps to existing steps for today
+            updatedHistory[todayKey] = currentSteps + stepCount;
+            
+            // Save updated history with user-scoped key
+            await AsyncStorage.setItem(`stepHistory_${userId}`, JSON.stringify(updatedHistory));
+            
+            // Update state with new history
             setStepHistory(updatedHistory);
+            
+            // Reset step counter for next session
+            setStepCount(0);
 
             //Debug use
-            // Alert.alert(
-            //     'Steps Saved',
-            //     `Added ${stepCount} steps to ${todayKey}\nTotal steps today: ${stepHistory[todayKey]}\n\nFull History:\n${JSON.stringify(stepHistory, null, 2)}`,
-            //     [{ text: 'OK' }]
-            // );
+            Alert.alert(
+                'Steps Saved',
+                `Added ${stepCount} steps to ${todayKey}\nTotal steps today: ${stepHistory[todayKey]}\n\nFull History:\n${JSON.stringify(stepHistory, null, 2)}`,
+                [{ text: 'OK' }]
+            );
 
         } catch (error) {
             console.error('Failed to save step data:', error);

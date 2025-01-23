@@ -50,12 +50,15 @@ export default function ChatRoomScreen() {
 
   const sendMessage = async () => {
     if (input.trim()) {
+      const userId = await AsyncStorage.getItem('userToken');
+      if (!userId) return;
+      
       const userMessage: Message = { role: 'user', content: input };
       const updatedMessages = [...messages, userMessage];
       
       // Update state and storage atomically
       setMessages(updatedMessages);
-      await AsyncStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+      await AsyncStorage.setItem(`chatMessages_${userId}`, JSON.stringify(updatedMessages));
       
       setInput('');
       setIsTyping(true);
@@ -67,7 +70,7 @@ export default function ChatRoomScreen() {
         // Update state and storage atomically
         setMessages(prev => {
           const newMessages = [...prev, assistantMessage];
-          AsyncStorage.setItem('chatMessages', JSON.stringify(newMessages));
+          AsyncStorage.setItem(`chatMessages_${userId}`, JSON.stringify(newMessages));
           return newMessages;
         });
       } catch (error) {

@@ -5,8 +5,6 @@ import { useRouter } from 'expo-router';
 import { useColorScheme } from '../../hooks/useColorScheme';
 import ThemedText from '../../componemts/ThemedText';
 import { ThemedView } from '../../componemts/ThemedView';
-
-
 export default function SettingScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
@@ -29,6 +27,9 @@ export default function SettingScreen() {
         <ThemedText type='subtitle'>設定</ThemedText>
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <ThemedText style={styles.buttonText}>登出</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/AdminTools')}>
+          <ThemedText style={styles.buttonText}>admin</ThemedText>
         </TouchableOpacity>
       </ThemedView>
     </ScrollView>

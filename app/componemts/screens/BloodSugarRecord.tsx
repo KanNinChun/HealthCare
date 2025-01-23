@@ -18,8 +18,11 @@ const BloodSugarRecord = () => {
     useCallback(() => {
       const loadRecords = async () => {
         try {
-          const stored = await AsyncStorage.getItem('bloodSugarRecords');
-         
+          const userId = await AsyncStorage.getItem('userToken');
+          if (!userId) return;
+          
+          const stored = await AsyncStorage.getItem(`bloodSugarRecords_${userId}`);
+          
           if (stored) setRecords(JSON.parse(stored));
         } catch (error) {
           console.error('Error loading records:', error);
