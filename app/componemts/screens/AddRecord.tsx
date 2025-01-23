@@ -8,6 +8,7 @@ import { TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import type { RootStackParamList } from '../../naviagtions/types';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AddRecord = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -48,7 +49,8 @@ const AddRecord = () => {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+    <ThemedView style={styles.container2}>
       {/* DateTime Selector */}
       <View style={styles.section}>
         <ThemedText style={styles.label}>日期和時間 ▸</ThemedText>
@@ -104,14 +106,17 @@ const AddRecord = () => {
         <ThemedText style={styles.saveButtonText}>保存記錄</ThemedText>
       </TouchableOpacity>
     </ThemedView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 50,
+  },
+  container2: {
+   padding: 5,
+   flex: 1,
   },
   section: {
     marginBottom: 30,

@@ -9,7 +9,7 @@ import { LineChart } from 'react-native-chart-kit';
 import { Circle } from 'react-native-svg';
 import { FloatingAction } from 'react-native-floating-action';
 import { router } from 'expo-router';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BloodSugarRecord = () => {
   const [records, setRecords] = useState<Array<{ value: number; timestamp: string }>>([]);
@@ -20,9 +20,9 @@ const BloodSugarRecord = () => {
         try {
           const userId = await AsyncStorage.getItem('userToken');
           if (!userId) return;
-          
+
           const stored = await AsyncStorage.getItem(`bloodSugarRecords_${userId}`);
-          
+
           if (stored) setRecords(JSON.parse(stored));
         } catch (error) {
           console.error('Error loading records:', error);
@@ -112,120 +112,124 @@ const BloodSugarRecord = () => {
   const verticalPadding = 20;
 
   return (
-    <ThemedView style={styles.container}>
-      <ScrollView>
-        {/* Summary Cards */}
-        <View style={styles.summaryRow}>
-          <ThemedView style={[styles.card, styles.latestCard]}>
-            <ThemedText style={styles.cardTitle}>最近新增</ThemedText>
-            <ThemedText style={styles.cardValue}>
-              {records.length > 0 ?
-                `${records[records.length - 1].value.toFixed(1)} mmol/L` :
-                '--'
-              }
-            </ThemedText>
-          </ThemedView>
-
-          <ThemedView style={[styles.card, styles.average3Card]}>
-            <ThemedText style={styles.cardTitle}>3日 平均值</ThemedText>
-            <ThemedText style={styles.cardValue}>
-              {getAverage(3).toFixed(1)} mmol/L
-            </ThemedText>
-          </ThemedView>
-
-          <ThemedView style={[styles.card, styles.average7Card]}>
-            <ThemedText style={styles.cardTitle}>7日 平均值</ThemedText>
-            <ThemedText style={styles.cardValue}>
-              {getAverage(7).toFixed(1)} mmol/L
-            </ThemedText>
-          </ThemedView>
-        </View>
-
-        {/* Chart */}
-        <View style={styles.chartContainer}>
-          {records.length > 0 ? (
-            <LineChart
-              data={{
-                labels: records.map((r) => format(new Date(r.timestamp), 'MM/dd')),
-                datasets: [{
-                  data: records.map((r) => r.value),
-                  color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
-                  strokeWidth: 2
-                }]
-              }}
-              width={chartWidth}
-              height={220}
-              chartConfig={{
-                backgroundGradientFrom: '#fff',
-                backgroundGradientTo: '#fff',
-                decimalPlaces: 1,
-                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                propsForDots: {
-                  r: '5',
-                  strokeWidth: '2',
-                  stroke: '#fff'
+    <SafeAreaView style={styles.container}>
+      <ThemedView style={styles.container2}>
+        <ScrollView>
+          {/* Summary Cards */}
+          <View style={styles.summaryRow}>
+            <ThemedView style={[styles.card, styles.latestCard]}>
+              <ThemedText style={styles.cardTitle}>最近新增</ThemedText>
+              <ThemedText style={styles.cardValue}>
+                {records.length > 0 ?
+                  `${records[records.length - 1].value.toFixed(1)} mmol/L` :
+                  '--'
                 }
-              }}
-              bezier
-              style={{ marginVertical: 25 }}
-              formatYLabel={(value) => `${(Math.round(Number(value) ) ).toFixed(1)} `}
-              segments={5}
-              fromZero
-            />
-          ) : (
-            <ThemedText style={styles.noDataText}>
-              沒有血糖記錄
-            </ThemedText>
-          )}
-        </View>
+              </ThemedText>
+            </ThemedView>
+
+            <ThemedView style={[styles.card, styles.average3Card]}>
+              <ThemedText style={styles.cardTitle}>3日 平均值</ThemedText>
+              <ThemedText style={styles.cardValue}>
+                {getAverage(3).toFixed(1)} mmol/L
+              </ThemedText>
+            </ThemedView>
+
+            <ThemedView style={[styles.card, styles.average7Card]}>
+              <ThemedText style={styles.cardTitle}>7日 平均值</ThemedText>
+              <ThemedText style={styles.cardValue}>
+                {getAverage(7).toFixed(1)} mmol/L
+              </ThemedText>
+            </ThemedView>
+          </View>
+
+          {/* Chart */}
+          <View style={styles.chartContainer}>
+            {records.length > 0 ? (
+              <LineChart
+                data={{
+                  labels: records.map((r) => format(new Date(r.timestamp), 'MM/dd')),
+                  datasets: [{
+                    data: records.map((r) => r.value),
+                    color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
+                    strokeWidth: 2
+                  }]
+                }}
+                width={chartWidth}
+                height={220}
+                chartConfig={{
+                  backgroundGradientFrom: '#fff',
+                  backgroundGradientTo: '#fff',
+                  decimalPlaces: 1,
+                  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                  propsForDots: {
+                    r: '5',
+                    strokeWidth: '2',
+                    stroke: '#fff'
+                  }
+                }}
+                bezier
+                style={{ marginVertical: 25 }}
+                formatYLabel={(value) => `${(Math.round(Number(value))).toFixed(1)} `}
+                segments={5}
+                fromZero
+              />
+            ) : (
+              <ThemedText style={styles.noDataText}>
+                沒有血糖記錄
+              </ThemedText>
+            )}
+          </View>
           <ThemedView>
             {
               records.length > 0 ? (
                 < ThemedView style={styles.infocontainer}>
-                <ThemedView style={styles.infolist}>
-                  <ThemedText>血糖值</ThemedText>
-                  <ThemedText>情況</ThemedText>
-                  <ThemedText>日期</ThemedText>
+                  <ThemedView style={styles.infolist}>
+                    <ThemedText>血糖值</ThemedText>
+                    <ThemedText>情況</ThemedText>
+                    <ThemedText>日期</ThemedText>
+                  </ThemedView>
+
+                  <View style={styles.recordList}>
+                    {records.map((record, index) => (
+                      <ThemedView key={index} style={styles.recordItem}>
+                        <ThemedText style={[styles.recordValue, { color: colorNumberToHex(getColorForValue(record.value)) }]}>
+                          {record.value} mmol/L
+                        </ThemedText>
+                        <ThemedText style={styles.recordStatus}>{getStatus(record.value)}</ThemedText>
+                        <ThemedText style={styles.recordTimestamp}>
+                          {format(new Date(record.timestamp), 'yyyy-MM-dd HH:mm')}
+                        </ThemedText>
+                      </ThemedView>
+                    ))}
+                  </View>
                 </ThemedView>
-        
-                <View style={styles.recordList}>
-                  {records.map((record, index) => (
-                    <ThemedView key={index} style={styles.recordItem}>
-                      <ThemedText style={[styles.recordValue, { color: colorNumberToHex(getColorForValue(record.value)) }]}>
-                        {record.value} mmol/L
-                      </ThemedText>
-                      <ThemedText style={styles.recordStatus}>{getStatus(record.value)}</ThemedText>
-                      <ThemedText style={styles.recordTimestamp}>
-                        {format(new Date(record.timestamp), 'yyyy-MM-dd HH:mm')}
-                      </ThemedText>
-                    </ThemedView>
-                  ))}
-                </View>
-            </ThemedView>
               ) : null
             }
           </ThemedView>
-      </ScrollView>
+        </ScrollView>
 
-      {/* Floating Action Button */}
-      <FloatingAction
-        actions={[{
-          text: '新增記錄',
-          icon: <ThemedText style={{ fontSize: 24 }}>+</ThemedText>,
-          name: 'add_record',
-        }]}
-        onPressItem={() => router.push('/componemts/screens/AddRecord')}
-      />
-    </ThemedView>
+        {/* Floating Action Button */}
+        <FloatingAction
+          actions={[{
+            text: '新增記錄',
+            icon: <ThemedText style={{ fontSize: 24 }}>+</ThemedText>,
+            name: 'add_record',
+          }]}
+          onPressItem={() => router.push('/componemts/screens/AddRecord')}
+        />
+      </ThemedView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
-    paddingTop: 40,
+  },
+  container2: {
+    padding: 5,
+    flex: 1,
   },
   infocontainer: {
     borderWidth: 1,

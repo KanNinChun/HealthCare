@@ -5,6 +5,8 @@ import { ThemedView } from '../ThemedView'
 import ThemedText from '../ThemedText'
 import { SharedValue } from 'react-native-reanimated'
 import { LinearGradient } from 'expo-linear-gradient'
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 type Props = {
     sliderItem: NewsDataType,
     index: number
@@ -14,32 +16,36 @@ type Props = {
 const { width } = Dimensions.get('screen')
 const SliderItem = ({ sliderItem, index, scrollX }: Props) => {
     return (
-        <ThemedView style={styles.itemWrapper}>
-            <Image source={{ uri: sliderItem.image_url }} style={styles.image} />
-            <LinearGradient colors={["transparent", "rgba(0,0,0,0.4)"]} style={styles.background}>
-                <View style={styles.sourceInfo}>
+        <SafeAreaView style={styles.container}>
+            <ThemedView style={styles.itemWrapper}>
+                <Image source={{ uri: sliderItem.image_url }} style={styles.image} />
+                <LinearGradient colors={["transparent", "rgba(0,0,0,0.4)"]} style={styles.background}>
+                    <View style={styles.sourceInfo}>
 
-                    {sliderItem.source_icon && (
-                        <Image source={{ uri: sliderItem.source_icon }} style={styles.sourceIcon} />
-                    )}
-                    <ThemedText>{sliderItem.source_name}</ThemedText>
-                </View>
+                        {sliderItem.source_icon && (
+                            <Image source={{ uri: sliderItem.source_icon }} style={styles.sourceIcon} />
+                        )}
+                        <ThemedText>{sliderItem.source_name}</ThemedText>
+                    </View>
 
-                <ThemedText style={styles.content}
+                    <ThemedText style={styles.content}
                         numberOfLines={3} // 限制文本顯示行數
                         ellipsizeMode='tail' // 超出部分顯示省略號
                         adjustsFontSizeToFit //自動調整字體大小以便填滿寬度
                     >{sliderItem.title}
                     </ThemedText>
-            </LinearGradient>
-
-        </ThemedView>
+                </LinearGradient>
+            </ThemedView>
+        </SafeAreaView>
     )
 }
 
 export default SliderItem
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
     itemWrapper: {
         width: width,
         justifyContent: 'center',
@@ -47,11 +53,10 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     content: {
-        marginTop: 10, 
-        fontSize: 14, 
+        marginTop: 10,
+        fontSize: 16,
         alignItems: 'center',
     },
-
     image: {
         width: width - 30,
         justifyContent: 'center',
@@ -77,10 +82,10 @@ const styles = StyleSheet.create({
         height: 25,
         borderRadius: 20,
     },
-    sourceInfo:{
+    sourceInfo: {
         flexDirection: 'row',
         position: 'absolute',
-        top:120,
+        top: 120,
         paddingHorizontal: 20,
         gap: 10,
     }

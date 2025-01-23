@@ -1,4 +1,4 @@
-import { View,StyleSheet, TouchableOpacity, ActivityIndicator , ImageBackground} from "react-native";
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator, ImageBackground } from "react-native";
 import { useColorScheme } from './hooks/useColorScheme';
 import ThemedText from './componemts/ThemedText';
 import { ThemedView } from './componemts/ThemedView';
@@ -9,6 +9,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from 'react'
 import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Database Initialization
 let db: SQLite.SQLiteDatabase | null = null;
@@ -39,48 +40,41 @@ export default function LandingPage() {
   }, []);
 
   useEffect(() => {
-   if (isLoggedIn) {
-    router.replace('./(tabs)');
-   }
+    if (isLoggedIn) {
+      router.replace('./(tabs)');
+    }
   }, [isLoggedIn, router]);
 
-    if (!isLoggedIn) {
+  if (!isLoggedIn) {
     return (
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <StatusBar style="auto" />
+        <SafeAreaView style={styles.container}>
+          <ImageBackground
+            source={require('../assets/images/bg2.png')}
+            style={{ flex: 1 }}
+            resizeMode="cover">
 
-        <View className="flex-1">
-
-          <ImageBackground 
-          source={require('../assets/images/bg2.png')} 
-          style={{ flex: 1}}
-          resizeMode="cover">
-
-            <View style={styles.container}>
+            <View style={styles.container2}>
               <ThemedText lightColor="#FFFFFF" type="title">Welcome To Health Care</ThemedText>
               <ThemedText lightColor="#FFFFFF" type="description">Make your life better</ThemedText>
 
               <View style={styles.buttoncontainer}>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => router.push('/login')}
-              >
-                <ThemedText style={styles.buttonText}>Login</ThemedText>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => router.push('/login')}
+                >
+                  <ThemedText style={styles.buttonText}>登入</ThemedText>
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.button2}
-                onPress={() => router.push('/register')}
-              >
-              <ThemedText style={styles.buttonText}>Register</ThemedText>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.button2}
+                  onPress={() => router.push('/register')}
+                >
+                  <ThemedText style={styles.buttonText}>註冊</ThemedText>
+                </TouchableOpacity>
               </View>
             </View>
-           
           </ImageBackground>
-        </View>
-       
-      </ThemeProvider>
+        </SafeAreaView>
     );
   }
 
@@ -89,10 +83,13 @@ export default function LandingPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  container2: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor:'rgba(0,0,0,0.2)'
+    backgroundColor: 'rgba(0,0,0,0.2)'
   },
   title: {
     fontSize: 24,
@@ -105,18 +102,18 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     top: -190,
   },
-  button:{
+  button: {
     backgroundColor: '#007bff',
     paddingVertical: 10,
     paddingHorizontal: 130,
     borderRadius: 5,
-   marginBottom: 20,
+    marginBottom: 20,
   },
-  button2:{
+  button2: {
     backgroundColor: '#007bff',
     padding: 10,
     borderRadius: 5,
-   
+
   },
   buttonText: {
     color: 'white',

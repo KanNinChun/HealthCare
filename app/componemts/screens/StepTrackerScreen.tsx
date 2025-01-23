@@ -5,6 +5,7 @@ import ThemedText from '../ThemedText';
 import { Accelerometer } from 'expo-sensors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Helper to get today's date key
 const getTodayKey = () => format(new Date(), 'yyyy-MM-dd');
@@ -25,7 +26,7 @@ const test = () => {
 
     const startTracking = useCallback(() => {
         setIsCounting(true);
-        // Don't reset step count - let it continue from previous session
+
     }, []);
 
     const stopTracking = useCallback(async () => {
@@ -35,31 +36,31 @@ const test = () => {
             const todayKey = getTodayKey();
             const userId = await AsyncStorage.getItem('userToken');
             if (!userId) return;
-            
+
             const existingData = await AsyncStorage.getItem(`stepHistory_${userId}`);
             const updatedHistory = existingData ? JSON.parse(existingData) : {};
 
             // Get current steps for today
             const currentSteps = updatedHistory[todayKey] || 0;
-            
+
             // Add new steps to existing steps for today
             updatedHistory[todayKey] = currentSteps + stepCount;
-            
+
             // Save updated history with user-scoped key
             await AsyncStorage.setItem(`stepHistory_${userId}`, JSON.stringify(updatedHistory));
-            
+
             // Update state with new history
             setStepHistory(updatedHistory);
-            
+
             // Reset step counter for next session
             setStepCount(0);
 
             //Debug use
-            Alert.alert(
-                'Steps Saved',
-                `Added ${stepCount} steps to ${todayKey}\nTotal steps today: ${stepHistory[todayKey]}\n\nFull History:\n${JSON.stringify(stepHistory, null, 2)}`,
-                [{ text: 'OK' }]
-            );
+            // Alert.alert(
+            //     'Steps Saved',
+            //     `Added ${stepCount} steps to ${todayKey}\nTotal steps today: ${stepHistory[todayKey]}\n\nFull History:\n${JSON.stringify(stepHistory, null, 2)}`,
+            //     [{ text: 'OK' }]
+            // );
 
         } catch (error) {
             console.error('Failed to save step data:', error);
@@ -117,30 +118,30 @@ const test = () => {
         };
     }, [isCounting, lastY, lastTimeStamp]);
 
-
     return (
-        <ThemedView style={styles.container}>
-            <ThemedView style={styles.content}>
-                <ThemedText style={styles.stepLabel}>Steps</ThemedText>
-                <ThemedText style={styles.stepCount}>{stepCount}</ThemedText>
+        <SafeAreaView style={styles.container}>
+            <ThemedView style={styles.container2}>
+                <ThemedView style={styles.content}>
+                    <ThemedText style={styles.stepLabel}>Steps</ThemedText>
+                    <ThemedText style={styles.stepCount}>{stepCount}</ThemedText>
 
-                <ThemedView style={styles.Caloriescontainer}>
-                    <ThemedText>Estimate Calories Burned: </ThemedText>
-                    <ThemedText style={styles.caloriesText}>{EstimatedCaloriesBurned.toFixed(2)} kcal</ThemedText>
+                    <ThemedView style={styles.Caloriescontainer}>
+                        <ThemedText>Estimate Calories Burned: </ThemedText>
+                        <ThemedText style={styles.caloriesText}>{EstimatedCaloriesBurned.toFixed(2)} kcal</ThemedText>
+                    </ThemedView>
                 </ThemedView>
-            </ThemedView>
-            <ThemedView style={styles.buttonContainer}>
-                <TouchableOpacity
-                    style={[styles.button, isCounting ? styles.stopButton : styles.startButton]}
-                    onPress={isCounting ? stopTracking : startTracking}
-                >
-                    <ThemedText style={styles.buttonText}>
-                        {isCounting ? 'Stop Tracking' : 'Start Tracking'}
-                    </ThemedText>
-                </TouchableOpacity>
-            </ThemedView>
+                <ThemedView style={styles.buttonContainer}>
+                    <TouchableOpacity
+                        style={[styles.button, isCounting ? styles.stopButton : styles.startButton]}
+                        onPress={isCounting ? stopTracking : startTracking}
+                    >
+                        <ThemedText style={styles.buttonText}>
+                            {isCounting ? 'Stop Tracking' : 'Start Tracking'}
+                        </ThemedText>
+                    </TouchableOpacity>
+                </ThemedView>
 
-           
+
                 {showTotalSteps && (
                     <ThemedView style={styles.totalStepsContainer}>
                         <ThemedText style={styles.totalStepsLabel}>Today's Total Steps</ThemedText>
@@ -149,8 +150,9 @@ const test = () => {
                         </ThemedText>
                     </ThemedView>
                 )}
-            
-        </ThemedView>
+
+            </ThemedView>
+        </SafeAreaView>
 
     );
 };
@@ -163,7 +165,9 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        padding: 20,
+    },
+    container2: {
+        flex: 1,
     },
     content: {
         flex: 1,

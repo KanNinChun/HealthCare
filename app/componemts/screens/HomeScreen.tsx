@@ -11,6 +11,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import axios from 'axios';
 import { NewsDataType } from '../../constants/news'
 import NewsScreen from './NewsScreen';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
 interface User {
   id: number;
@@ -97,28 +99,33 @@ export default function HomeScreen() {
     );
   }
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={{ paddingTop: safeTop, paddingLeft: 4 }}>
-        <ThemedText type='subtitle'>歡迎回來,</ThemedText>
-        <ThemedText type='username'>{username}</ThemedText>
-        {isLoading ? (
-          <ActivityIndicator size={'large'} />) : (
-          <NewsScreen newsList={News} />
-        )}
+    <SafeAreaView style={styles.container}>
+      <ThemedView style={styles.container2}>
+        <ThemedView style={{ paddingTop: safeTop, paddingLeft: 4 }}>
+          <ThemedText type='subtitle'>歡迎回來,</ThemedText>
+          <ThemedText type='username'>{username}</ThemedText>
+          {isLoading ? (
+            <ActivityIndicator size={'large'} />) : (
+            <NewsScreen newsList={News} />
+          )}
 
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/StepTrackerScreen')}>
-          <ThemedText style={styles.buttonText}>步數追蹤</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/BloodSugarRecord')}>
-          <ThemedText style={styles.buttonText}>血糖記錄</ThemedText>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/StepTrackerScreen')}>
+            <ThemedText style={styles.buttonText}>步數追蹤</ThemedText>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/BloodSugarRecord')}>
+            <ThemedText style={styles.buttonText}>血糖記錄</ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
       </ThemedView>
-    </ThemedView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  container2: {
     flex: 1,
   },
   lightContainer: {

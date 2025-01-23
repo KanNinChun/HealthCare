@@ -7,6 +7,7 @@ import OpenAI from 'openai';
 import { ThemedView } from '../ThemedView';
 import ThemedText from '../ThemedText';
 import { useColorScheme } from '../../hooks/useColorScheme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -36,7 +37,7 @@ export default function ChatRoomScreen() {
         role: msg.role,
         content: msg.content
       }));
-      
+
       const completion = await openai.chat.completions.create({
         model: 'deepseek-chat',
         messages: formattedMessages,
@@ -52,21 +53,21 @@ export default function ChatRoomScreen() {
     if (input.trim()) {
       const userId = await AsyncStorage.getItem('userToken');
       if (!userId) return;
-      
+
       const userMessage: Message = { role: 'user', content: input };
       const updatedMessages = [...messages, userMessage];
-      
+
       // Update state and storage atomically
       setMessages(updatedMessages);
       await AsyncStorage.setItem(`chatMessages_${userId}`, JSON.stringify(updatedMessages));
-      
+
       setInput('');
       setIsTyping(true);
-      
+
       try {
         const gptResponse = await callOpenAI(updatedMessages);
         const assistantMessage: Message = { role: 'assistant', content: gptResponse || 'No response from DeepSeek.' };
-        
+
         // Update state and storage atomically
         setMessages(prev => {
           const newMessages = [...prev, assistantMessage];
@@ -95,7 +96,7 @@ export default function ChatRoomScreen() {
         console.error('Error loading messages:', error);
       }
     };
-    
+
     loadMessages();
   }, []);
 
@@ -107,31 +108,35 @@ export default function ChatRoomScreen() {
   const placeholderColor = useThemeColor({ light: '#888', dark: '#ccc' }, 'background');
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText style={styles.header}>Healthcare Chatbot</ThemedText>
-      <FlatList
-        data={messages}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }: { item: Message }) => (
-          <ThemedText style={item.role === 'user' ? userthemeContainerStyle : airthemeContainerStyle}>
-            {item.content}
-          </ThemedText>
-        )}
-        style={styles.messageList}
-      />
-      {isTyping && <TypingIndicator />}
-      <TextInput
-        style={inputfiledthemeContainerStyle}
-        value={input}
-        onChangeText={setInput}
-        placeholder="Type your message..."
-        placeholderTextColor={placeholderColor}
-      />
-      <ThemedView style={styles.buttonContainer}>
-        <Button title="Send" onPress={sendMessage} />
-        <Button title="Clear" onPress={clearChat} />
+    <SafeAreaView style={styles.container}>
+      <ThemedView style={styles.container2}>
+        <ThemedText style={styles.header}>AI 醫生</ThemedText>
+        <FlatList
+          data={messages}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }: { item: Message }) => (
+            <ThemedText style={item.role === 'user' ? userthemeContainerStyle : airthemeContainerStyle}>
+              {item.content}
+            </ThemedText>
+          )}
+          style={styles.messageList}
+        />
+        {isTyping && <TypingIndicator />}
+        <ThemedView style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end', paddingBottom: 100 }}>
+          <TextInput
+            style={inputfiledthemeContainerStyle}
+            value={input}
+            onChangeText={setInput}
+            placeholder="請在這裡輸入訊息..."
+            placeholderTextColor={placeholderColor}
+          />
+          <ThemedView style={styles.buttonContainer}>
+            <Button title="發送" onPress={sendMessage} />
+            <Button title="清理聊天記錄" onPress={clearChat} />
+          </ThemedView>
+        </ThemedView>
       </ThemedView>
-    </ThemedView>
+    </SafeAreaView>
   );
 }
 
@@ -181,13 +186,14 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+  },
+  container2: {
+    flex: 1,
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-    marginTop: 20,
+    paddingTop: 10,
     textAlign: 'center',
   },
   messageList: {
@@ -197,5 +203,9 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingVertical: 10,
+    height: 60,
   },
 });

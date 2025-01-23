@@ -1,13 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { hospitals, clinics, clinics2 } from '../../constants/hospitals';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Location from 'expo-location';
 
 export default function Map() {
   const [mapReady, setMapReady] = useState(false);
   const isFocused = useIsFocused();
+
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function getCurrentLocation() {
+      if (isFocused) {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+      }
+    }
+    getCurrentLocation();
+  }, [isFocused]);
+
+  let text = 'Waiting...';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
 
   // Combine all data sources
   const allFacilities = [
@@ -28,7 +55,7 @@ export default function Map() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.container}>
         <MapView
           style={styles.map}
@@ -93,22 +120,5 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
-
   },
-  loadingOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.8)',
-    zIndex: 1,
-  },
-  loadingText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
-  }
 });

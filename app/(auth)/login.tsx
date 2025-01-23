@@ -16,6 +16,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import  ThemedText  from '../componemts/ThemedText';
 import { ThemedView } from '../componemts/ThemedView';
 import { useColorScheme } from '../hooks/useColorScheme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Define a type for the user object returned from the database
 interface User {
@@ -47,11 +48,11 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     const database = await openDatabase();
     if (!database) {
-      Alert.alert('Error', 'Failed to open database');
+      Alert.alert('伺服器連線錯誤', '請聯繫系統管理員');
       return;
     }
     if (!username || !password) {
-      Alert.alert('Error', 'Please enter both username and password.');
+      Alert.alert('錯誤', '請輸入用戶名和密碼');
       return;
     }
 
@@ -62,7 +63,7 @@ const LoginScreen = () => {
         [username],
       );
       if (!result) {
-        Alert.alert('Login Failed', 'User not found.');
+        Alert.alert('登入失敗', '找不到該用戶');
         setLoading(false)
         return;
       }
@@ -71,27 +72,28 @@ const LoginScreen = () => {
 
       if (passwordMatch) {
         await AsyncStorage.setItem('userToken', result.id.toString());
-        console.log("Login Success", result.id.toString())
+        console.log("登入成功", result.id.toString())
         router.replace('../(tabs)'); // Redirect to the main layout
       } else {
-        Alert.alert('Login Failed', 'Incorrect password.');
+        Alert.alert('登入失敗', '賬戶或密碼錯誤.'); 
       }
       setLoading(false);
 
     } catch (error) {
-      console.error('Login error:', error);
-      Alert.alert('Error', 'Login failed.');
+      console.error('登入失敗:', error);
+      Alert.alert('發生錯誤', '登入失敗.');
       setLoading(false);
     }
   };
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <ThemedView style={styles.container}>
-        <ThemedText type='title' style={{ textAlign: 'center' }}>Login</ThemedText>
+      <SafeAreaView style={styles.container}>
+      <ThemedView style={styles.container2}>
+        <ThemedText type='title' style={{ textAlign: 'center' }}>登入</ThemedText>
         <View style={{ flexDirection: "row", alignItems: 'center', }}>
           <TextInput
             style={[styles.input, { color: themeContainerStyle.color, }]}
-            placeholder="Username"
+            placeholder="用戶名"
             placeholderTextColor={themeContainerStyle.color}
             value={username}
             onChangeText={setUsername}
@@ -102,7 +104,7 @@ const LoginScreen = () => {
         <View style={{ flexDirection: "row", alignItems: 'center'}}>
           <TextInput
             style={[styles.input, { color: themeContainerStyle.color }]}
-            placeholder="Password"
+            placeholder="密碼"
             placeholderTextColor={themeContainerStyle.color}
             value={password}
             onChangeText={(text) => {
@@ -126,16 +128,17 @@ const LoginScreen = () => {
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <TouchableOpacity style={[styles.button, { width: '60%', alignSelf: 'center' }]} onPress={handleLogin}>
-            <ThemedText style={styles.buttonText}>Login</ThemedText>
+            <ThemedText style={styles.buttonText}>登入</ThemedText>
           </TouchableOpacity>
         )}
         <TouchableOpacity
           onPress={() => router.push('/register')}
           style={{ alignSelf: 'center', marginTop: 15 }}
         >
-          <ThemedText type="link" style={{ textAlign: 'center' }}>Don't have an account? Register</ThemedText>
+          <ThemedText type="link" style={{ textAlign: 'center' }}>沒有帳號? 註冊</ThemedText>
         </TouchableOpacity>
       </ThemedView>
+      </SafeAreaView>
     </ThemeProvider>
   );
 };
@@ -146,6 +149,9 @@ LoginScreen.options = {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  container2: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

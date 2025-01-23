@@ -2,9 +2,11 @@ import React from 'react'
 import { SQLiteDatabase, SQLiteProvider } from 'expo-sqlite'
 import { Stack} from 'expo-router'
 import { StatusBar } from 'expo-status-bar';
+import { useColorScheme } from './hooks/useColorScheme'; 
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 
 export default function _layout() {
-
+  const colorScheme = useColorScheme();
     const createDbIfNeeded = async (db: SQLiteDatabase) => {
         console.log("Creating database if needed");
         await db.execAsync(`
@@ -18,6 +20,7 @@ export default function _layout() {
 
   return (
     <SQLiteProvider databaseName="healthcare.db" onInit={createDbIfNeeded}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <StatusBar style="auto" />
         <Stack>
             <Stack.Screen name="index" options={{ headerShown: false }} />
@@ -40,6 +43,7 @@ export default function _layout() {
             <Stack.Screen name="componemts/screens/AddRecord" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/Map" options={{ headerShown: false }}/>
         </Stack>
+        </ThemeProvider>
     </SQLiteProvider>
   )
 }

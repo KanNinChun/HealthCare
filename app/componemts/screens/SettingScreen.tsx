@@ -5,6 +5,8 @@ import { useRouter } from 'expo-router';
 import { useColorScheme } from '../../hooks/useColorScheme';
 import ThemedText from '../../componemts/ThemedText';
 import { ThemedView } from '../../componemts/ThemedView';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 export default function SettingScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme();
@@ -22,8 +24,8 @@ export default function SettingScreen() {
     }
   };
   return (
-    <ScrollView style={{ backgroundColor: themeContainerStyle.backgroundColor }}>
-      <ThemedView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <ThemedView style={styles.container2}>
         <ThemedText type='subtitle'>設定</ThemedText>
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <ThemedText style={styles.buttonText}>登出</ThemedText>
@@ -32,14 +34,16 @@ export default function SettingScreen() {
           <ThemedText style={styles.buttonText}>admin</ThemedText>
         </TouchableOpacity>
       </ThemedView>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+  },
+  container2: {
+    flex: 1,
   },
   button: {
     backgroundColor: '#007bff',
