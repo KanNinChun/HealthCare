@@ -57,7 +57,7 @@ const HealthInfoScreen = () => {
             {/* AI問題解答 */}
             <ThemedText style={styles.Text}>有其他問題搵唔到答案?即刻試下用AI黎幫你解答!</ThemedText>
             <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/ChatRoomScreen')}>
-                <ThemedText style={styles.buttonText}>AI聊天室</ThemedText>
+                <ThemedText style={styles.buttonText}>AI醫生</ThemedText>
             </TouchableOpacity>
             </ThemedView>
         </ThemedView>
