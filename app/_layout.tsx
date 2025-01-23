@@ -26,7 +26,6 @@ export default function _layout() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/NewsScreen" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/HomeScreen" options={{ headerShown: false }}/>
-            <Stack.Screen name="componemts/screens/HeartRateScreen" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/ChatRoomScreen" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/HealthInfoScreen" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/SettingScreen" options={{ headerShown: false }}/>
@@ -39,6 +38,7 @@ export default function _layout() {
             <Stack.Screen name="componemts/screens/StepTrackerScreen" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/BloodSugarRecord" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/AddRecord" options={{ headerShown: false }}/>
+            <Stack.Screen name="componemts/screens/test" options={{ headerShown: false }}/>
         </Stack>
     </SQLiteProvider>
   )
