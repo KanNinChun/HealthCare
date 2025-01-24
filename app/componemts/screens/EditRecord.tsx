@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Alert, TouchableOpacity, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedView } from '../ThemedView';
 import ThemedText from '../ThemedText';
@@ -10,6 +10,8 @@ const EditRecord = () => {
   const params = useLocalSearchParams<{ record: string }>();
   const [record, setRecord] = useState<{ value: number; timestamp: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [editedValue, setEditedValue] = useState('');
 
   useEffect(() => {
     const initialize = async () => {
@@ -78,6 +80,43 @@ const EditRecord = () => {
     }
   };
 
+  const handleEdit = async () => {
+    try {
+      if (!record) return;
+      
+      const newValue = parseFloat(editedValue);
+      if (isNaN(newValue)) {
+        Alert.alert('錯誤', '請輸入有效的血糖值');
+        return;
+      }
+
+      const userId = await AsyncStorage.getItem('userToken');
+      if (!userId) return;
+
+      const stored = await AsyncStorage.getItem(`bloodSugarRecords_${userId}`);
+      if (stored) {
+        const records = JSON.parse(stored);
+        const updatedRecords = records.map((r: any) =>
+          r.timestamp === record.timestamp && r.value === record.value
+            ? { ...r, value: newValue }
+            : r
+        );
+        
+        await AsyncStorage.setItem(
+          `bloodSugarRecords_${userId}`,
+          JSON.stringify(updatedRecords)
+        );
+        
+        setRecord({ ...record, value: newValue });
+        setEditing(false);
+        Alert.alert('成功', '記錄已更新');
+      }
+    } catch (error) {
+      console.error('Error editing record:', error);
+      Alert.alert('錯誤', '更新記錄時發生錯誤');
+    }
+  };
+
   const confirmDelete = () => {
     Alert.alert(
       '刪除記錄',
@@ -88,14 +127,6 @@ const EditRecord = () => {
       ]
     );
   };
-
-  if (!record) {
-    return (
-      <ThemedView style={styles.container}>
-        <ThemedText>加載中...</ThemedText>
-      </ThemedView>
-    );
-  }
 
   return (
     <ThemedView style={styles.container}>
@@ -109,12 +140,47 @@ const EditRecord = () => {
         </ThemedText>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={confirmDelete}
-          >
-            <ThemedText style={styles.buttonText}>刪除記錄</ThemedText>
-          </TouchableOpacity>
+          {editing ? (
+            <>
+              <TextInput
+                style={styles.input}
+                value={editedValue}
+                onChangeText={setEditedValue}
+                placeholder="輸入新的血糖值"
+                keyboardType="numeric"
+              />
+              <TouchableOpacity
+                style={[styles.button, styles.saveButton]}
+                onPress={handleEdit}
+              >
+                <ThemedText style={styles.buttonText}>保存</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.cancelButton]}
+                onPress={() => setEditing(false)}
+              >
+                <ThemedText style={styles.buttonText}>取消</ThemedText>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity
+                style={[styles.button, styles.editButton]}
+                onPress={() => {
+                  setEditedValue(record.value.toString());
+                  setEditing(true);
+                }}
+              >
+                <ThemedText style={styles.buttonText}>編輯</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.deleteButton]}
+                onPress={confirmDelete}
+              >
+                <ThemedText style={styles.buttonText}>刪除</ThemedText>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
     </ThemedView>
@@ -142,12 +208,32 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 30,
   },
-  deleteButton: {
-    backgroundColor: '#ff4444',
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+    fontSize: 18,
+  },
+  button: {
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
     alignItems: 'center',
+    marginBottom: 12,
+  },
+  editButton: {
+    backgroundColor: '#4CAF50',
+  },
+  saveButton: {
+    backgroundColor: '#2196F3',
+  },
+  cancelButton: {
+    backgroundColor: '#9E9E9E',
+  },
+  deleteButton: {
+    backgroundColor: '#ff4444',
   },
   buttonText: {
     color: '#fff',
