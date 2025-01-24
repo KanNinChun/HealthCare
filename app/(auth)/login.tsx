@@ -46,6 +46,7 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFingerprintAvailable, setIsFingerprintAvailable] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const checkFingerprintAvailability = async () => {
@@ -103,7 +104,7 @@ const LoginScreen = () => {
       return;
     }
     if (!username || !password) {
-      Alert.alert('Error', 'Please enter both username and password.');
+      setErrorMessage('Please enter both username and password.');
       return;
     }
 
@@ -114,8 +115,8 @@ const LoginScreen = () => {
         [username],
       );
       if (!result) {
-        Alert.alert('Login Failed', 'User not found.');
-        setLoading(false)
+        setErrorMessage('User not found.');
+        setLoading(false);
         return;
       }
 
@@ -127,7 +128,7 @@ const LoginScreen = () => {
         console.log("Login Success", result.id.toString())
         router.replace('../(tabs)'); // Redirect to the main layout
       } else {
-        Alert.alert('Login Failed', 'Incorrect password.');
+        setErrorMessage('Incorrect password.');
       }
       setLoading(false);
 
@@ -150,6 +151,7 @@ const LoginScreen = () => {
             value={username}
             onChangeText={setUsername}
             autoCapitalize="none"
+            testID="username-input"
           />
         </View>
 
@@ -163,10 +165,12 @@ const LoginScreen = () => {
               setPassword(text)
             }}
             secureTextEntry={!isPasswordVisible}
+            testID="password-input"
           />
           <TouchableOpacity
             style={styles.iconButton}
             onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+            testID="password-toggle"
           >
             <Ionicons
               name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
@@ -180,7 +184,16 @@ const LoginScreen = () => {
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <>
-            <TouchableOpacity style={[styles.button, { width: '60%', alignSelf: 'center' }]} onPress={handleLogin}>
+            {errorMessage && (
+              <ThemedText style={{ color: 'red', marginBottom: 10, textAlign: 'center' }}>
+                {errorMessage}
+              </ThemedText>
+            )}
+            <TouchableOpacity
+              style={[styles.button, { width: '60%', alignSelf: 'center' }]}
+              onPress={handleLogin}
+              testID="login-button"
+            >
               <ThemedText style={styles.buttonText}>Login</ThemedText>
             </TouchableOpacity>
             {isFingerprintAvailable && (
@@ -196,6 +209,7 @@ const LoginScreen = () => {
                     alignItems: 'center'
                   }]}
                   onPress={handleFingerprintLogin}
+                  testID="fingerprint-button"
                 >
                   <Ionicons name="finger-print" size={24} color="white" style={{ marginRight: 8 }} />
                   <ThemedText style={styles.buttonText}>Login with Fingerprint</ThemedText>

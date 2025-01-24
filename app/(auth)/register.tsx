@@ -132,6 +132,7 @@ const RegisterScreen = () => {
           <TouchableOpacity
             style={styles.iconButton}
             onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+            testID="password-toggle"
           >
             <Ionicons
               name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
@@ -143,9 +144,17 @@ const RegisterScreen = () => {
         {passwordError ? <ThemedText style={styles.errorText}>{passwordError}</ThemedText> : null}
 
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator
+            size="large"
+            color="#0000ff"
+            testID="loading-indicator"
+          />
         ) : (
-          <TouchableOpacity style={[styles.button, { width: '60%', alignSelf: 'center' }]} onPress={handleRegister}>
+          <TouchableOpacity
+            style={[styles.button, { width: '60%', alignSelf: 'center' }]}
+            onPress={handleRegister}
+            testID="register-button"
+          >
             <ThemedText style={styles.buttonText}>Register</ThemedText>
           </TouchableOpacity>
         )}
