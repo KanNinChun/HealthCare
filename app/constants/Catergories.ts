@@ -7,14 +7,14 @@ const newsCategoryList = [
     },
     {
       id: 2,
-      title: 'Politics',
-      slug: 'politics',
+      title: 'Health',
+      slug: 'health',
       selected: false,
     },
     {
       id: 3,
-      title: 'Science',
-      slug: 'science',
+      title: 'Lifestyle',
+      slug: 'lifestyle',
       selected: false,
     },
     {
@@ -31,14 +31,14 @@ const newsCategoryList = [
     },
     {
       id: 6,
-      title: 'Technology',
-      slug: 'technology',
+      title: 'Science',
+      slug: 'science',
       selected: false,
     },
     {
       id: 7,
-      title: 'Business',
-      slug: 'business',
+      title: 'Science',
+      slug: 'science',
       selected: false,
     },
   ];

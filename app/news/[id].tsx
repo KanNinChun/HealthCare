@@ -6,7 +6,7 @@ import ThemedText from '../componemts/ThemedText'
 import { Ionicons } from '@expo/vector-icons'
 import axios from 'axios'
 import { NewsDataType } from '../constants/news'
-
+import moment from 'moment'
 type Props = {}
 
 const NewDetails = (props: Props) => {
@@ -60,7 +60,7 @@ const NewDetails = (props: Props) => {
                     <ThemedView style={styles.contentContainer}>
                     <ThemedText style={styles.title}>{News[0].title}</ThemedText>
                     <ThemedView style={styles.newsinfoWrapper}>
-                        <ThemedText style={styles.newsinfo}>{News[0].pubDate}</ThemedText>
+                        <ThemedText style={styles.newsinfo}>{moment(News[0].pubDate).format('MMMM DD, hh:mm a')}</ThemedText>
                         <ThemedText style={styles.newsinfo}>{News[0].source_name}</ThemedText>
                     </ThemedView>
                     <Image source = {{uri: News[0].image_url}} style={styles.newsImg} />

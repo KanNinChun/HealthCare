@@ -41,7 +41,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [News, setNews] = useState<NewsDataType[]>([]);
-  const [CategoriesNewe, setCategoriesNew] = useState<NewsDataType[]>([]);
+  const [CategoriesNews, setCategoriesNew] = useState<NewsDataType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -145,7 +145,7 @@ export default function HomeScreen() {
             <NewsScreen newsList={News} />
           )}
           <Categories onCategoriesChanged={onCatChanged}/>
-          <NewsList newsList={CategoriesNewe}/>
+          <NewsList newsList={CategoriesNews}/>
         </ThemedView>
       </ScrollView>
     </SafeAreaView>

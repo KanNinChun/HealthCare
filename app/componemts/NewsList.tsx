@@ -1,8 +1,9 @@
-import { StyleSheet, Image } from 'react-native'
+import { StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import ThemedText from './ThemedText'
 import { ThemedView } from './ThemedView'
 import { NewsDataType } from '../constants/news'
+import { Link } from 'expo-router'
 
 type Props = {
     newsList: Array<NewsDataType>
@@ -13,17 +14,21 @@ const NewsList = ({ newsList }: Props) => {
         <ThemedView>
             <ThemedText style={styles.container}></ThemedText>
             {newsList.map((item, index) => (
-                <ThemedView key={index} style={styles.itemContainer}>
-                    <Image source={{ uri: item.image_url }} style={styles.itemImage} />
-                    <ThemedView style={styles.itemInfo}>
-                        <ThemedText style={styles.itemCategory}>{item.category}</ThemedText>
-                        <ThemedText style={styles.itemTitle}>{item.title}</ThemedText>
-                    </ThemedView>
-                    <ThemedView style={styles.itemSourceInfo}>
-                        <Image source={{ uri: item.source_icon }} style={styles.itemSourceImg} />
-                        <ThemedText style={styles.itemSourceName}>{item.source_name}</ThemedText>
-                    </ThemedView>
-                </ThemedView>
+                <Link href={`../../news/${item.article_id}`} asChild key={index}>
+                    <TouchableOpacity>
+                        <ThemedView style={styles.itemContainer}>
+                            <Image source={{ uri: item.image_url }} style={styles.itemImage} />
+                            <ThemedView style={styles.itemInfo}>
+                                <ThemedText style={styles.itemCategory}>{item.category}</ThemedText>
+                                <ThemedText style={styles.itemTitle}>{item.title}</ThemedText>
+                            </ThemedView>
+                            <ThemedView style={styles.itemSourceInfo}>
+                                <Image source={{ uri: item.source_icon }} style={styles.itemSourceImg} />
+                                <ThemedText style={styles.itemSourceName}>{item.source_name}</ThemedText>
+                            </ThemedView>
+                        </ThemedView>
+                    </TouchableOpacity>
+                </Link>
             )
             )}
         </ThemedView>
