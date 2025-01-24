@@ -1,5 +1,5 @@
 // app/(auth)/login.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -12,9 +12,10 @@ import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { compare, hash } from 'bcrypt-ts';
-import { Ionicons } from '@expo/vector-icons'; // Import icon library
+import { Ionicons } from '@expo/vector-icons';
+import * as LocalAuthentication from 'expo-local-authentication';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import  ThemedText  from '../componemts/ThemedText';
+import ThemedText from '../componemts/ThemedText';
 import { ThemedView } from '../componemts/ThemedView';
 import { useColorScheme } from '../hooks/useColorScheme';
 
@@ -31,7 +32,7 @@ const openDatabase = async () => {
     db = await SQLite.openDatabaseAsync('healthcare.db');
     return db;
   } catch (error) {
-    console.error("Error while opening the database                      in login page", error);
+    console.error("Error while opening the database in login page", error);
     return null;
   }
 }
@@ -44,6 +45,56 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isFingerprintAvailable, setIsFingerprintAvailable] = useState(false);
+
+  useEffect(() => {
+    const checkFingerprintAvailability = async () => {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      const enrolled = await LocalAuthentication.isEnrolledAsync();
+      setIsFingerprintAvailable(compatible && enrolled);
+    };
+    checkFingerprintAvailability();
+  }, []);
+
+  const handleFingerprintLogin = async () => {
+    try {
+      const result = await LocalAuthentication.authenticateAsync({
+        promptMessage: 'Authenticate to login',
+        disableDeviceFallback: true,
+      });
+
+      if (result.success) {
+        const storedUsername = await AsyncStorage.getItem('fingerprintUsername');
+        if (storedUsername) {
+          setUsername(storedUsername);
+          const database = await openDatabase();
+          if (!database) {
+            Alert.alert('Error', 'Failed to open database');
+            return;
+          }
+
+          const user = await database.getFirstAsync<User>(
+            'SELECT * FROM users WHERE username = ?',
+            [storedUsername],
+          );
+
+          if (user) {
+            await AsyncStorage.setItem('userToken', user.id.toString());
+            router.replace('../(tabs)');
+          } else {
+            Alert.alert('Error', 'User not found');
+          }
+        } else {
+          Alert.alert('Error', 'No username stored for fingerprint login');
+        }
+      } else {
+        Alert.alert('Authentication Failed', 'Fingerprint authentication failed');
+      }
+    } catch (error) {
+      console.error('Fingerprint login error:', error);
+      Alert.alert('Error', 'Fingerprint authentication failed');
+    }
+  };
 
   const handleLogin = async () => {
     const database = await openDatabase();
@@ -72,6 +123,7 @@ const LoginScreen = () => {
 
       if (passwordMatch) {
         await AsyncStorage.setItem('userToken', result.id.toString());
+        await AsyncStorage.setItem('fingerprintUsername', username);
         console.log("Login Success", result.id.toString())
         router.replace('../(tabs)'); // Redirect to the main layout
       } else {
@@ -85,6 +137,7 @@ const LoginScreen = () => {
       setLoading(false);
     }
   };
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <ThemedView style={styles.container}>
@@ -100,7 +153,7 @@ const LoginScreen = () => {
           />
         </View>
 
-        <View style={{ flexDirection: "row", alignItems: 'center'}}>
+        <View style={{ flexDirection: "row", alignItems: 'center' }}>
           <TextInput
             style={[styles.input, { color: themeContainerStyle.color }]}
             placeholder="Password"
@@ -126,9 +179,30 @@ const LoginScreen = () => {
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
-          <TouchableOpacity style={[styles.button, { width: '60%', alignSelf: 'center' }]} onPress={handleLogin}>
-            <ThemedText style={styles.buttonText}>Login</ThemedText>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity style={[styles.button, { width: '60%', alignSelf: 'center' }]} onPress={handleLogin}>
+              <ThemedText style={styles.buttonText}>Login</ThemedText>
+            </TouchableOpacity>
+            {isFingerprintAvailable && (
+              <>
+                <TouchableOpacity
+                  style={[styles.button, {
+                    width: '60%',
+                    alignSelf: 'center',
+                    marginTop: 10,
+                    backgroundColor: '#34C759',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }]}
+                  onPress={handleFingerprintLogin}
+                >
+                  <Ionicons name="finger-print" size={24} color="white" style={{ marginRight: 8 }} />
+                  <ThemedText style={styles.buttonText}>Login with Fingerprint</ThemedText>
+                </TouchableOpacity>
+              </>
+            )}
+          </>
         )}
         <TouchableOpacity
           onPress={() => router.push('/register')}

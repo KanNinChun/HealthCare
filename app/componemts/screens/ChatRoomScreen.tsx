@@ -109,33 +109,38 @@ export default function ChatRoomScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ThemedView style={styles.container2}>
+      <ThemedView style={styles.headerContainer}>
         <ThemedText style={styles.header}>AI 醫生</ThemedText>
-        <FlatList
-          data={messages}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }: { item: Message }) => (
-            <ThemedText style={item.role === 'user' ? userthemeContainerStyle : airthemeContainerStyle}>
-              {item.content}
-            </ThemedText>
-          )}
-          style={styles.messageList}
+      </ThemedView>
+      
+      <FlatList
+        data={messages}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }: { item: Message }) => (
+          <ThemedText style={item.role === 'user' ? userthemeContainerStyle : airthemeContainerStyle}>
+            {item.content}
+          </ThemedText>
+        )}
+        style={styles.messageList}
+        contentContainerStyle={styles.messageListContent}
+      />
+      
+      {isTyping && <TypingIndicator />}
+      
+      <ThemedView style={styles.inputContainer}>
+        <TextInput
+          style={inputfiledthemeContainerStyle}
+          value={input}
+          onChangeText={setInput}
+          placeholder="請在這裡輸入訊息..."
+          placeholderTextColor={placeholderColor}
         />
-        {isTyping && <TypingIndicator />}
-        <ThemedView style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end', paddingBottom: 100 }}>
-          <TextInput
-            style={inputfiledthemeContainerStyle}
-            value={input}
-            onChangeText={setInput}
-            placeholder="請在這裡輸入訊息..."
-            placeholderTextColor={placeholderColor}
-          />
-          <ThemedView style={styles.buttonContainer}>
-            <Button title="發送" onPress={sendMessage} />
-            <Button title="清理聊天記錄" onPress={clearChat} />
-          </ThemedView>
+        <ThemedView style={styles.buttonContainer}>
+          <Button title="發送" onPress={sendMessage} />
+          <Button title="清理聊天記錄" onPress={clearChat} />
         </ThemedView>
       </ThemedView>
+      
     </SafeAreaView>
   );
 }
@@ -198,7 +203,6 @@ const styles = StyleSheet.create({
   },
   messageList: {
     flex: 1,
-    marginBottom: 20,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -207,5 +211,16 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingVertical: 10,
     height: 60,
+  },
+  headerContainer: {
+    paddingTop: 10,
+  },
+  messageListContent: {
+    paddingBottom: 20,
+  },
+  inputContainer: {
+    padding: 10,
+    paddingBottom: 20,
+    backgroundColor: 'transparent',
   },
 });
