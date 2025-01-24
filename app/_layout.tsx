@@ -42,6 +42,7 @@ export default function _layout() {
             <Stack.Screen name="componemts/screens/BloodSugarRecord" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/AddRecord" options={{ headerShown: false }}/>
             <Stack.Screen name="componemts/screens/Map" options={{ headerShown: false }}/>
+            <Stack.Screen name="componemts/screens/EditRecord" options={{ headerShown: false }}/>
         </Stack>
         </ThemeProvider>
     </SQLiteProvider>

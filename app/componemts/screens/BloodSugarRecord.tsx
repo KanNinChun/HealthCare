@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedView } from '../ThemedView';
 import ThemedText from '../ThemedText';
@@ -191,7 +191,15 @@ const BloodSugarRecord = () => {
 
                   <View style={styles.recordList}>
                     {records.map((record, index) => (
-                      <ThemedView key={index} style={styles.recordItem}>
+                      <TouchableOpacity
+                        key={index}
+                        style={styles.recordItem}
+                        onPress={() => router.push({
+                          pathname: '/componemts/screens/EditRecord',
+                          params: { record: JSON.stringify(record) }
+                        })}
+      
+                      >
                         <ThemedText style={[styles.recordValue, { color: colorNumberToHex(getColorForValue(record.value)) }]}>
                           {record.value} mmol/L
                         </ThemedText>
@@ -199,7 +207,7 @@ const BloodSugarRecord = () => {
                         <ThemedText style={styles.recordTimestamp}>
                           {format(new Date(record.timestamp), 'yyyy-MM-dd HH:mm')}
                         </ThemedText>
-                      </ThemedView>
+                      </TouchableOpacity>
                     ))}
                   </View>
                 </ThemedView>
@@ -210,12 +218,20 @@ const BloodSugarRecord = () => {
 
         {/* Floating Action Button */}
         <FloatingAction
-          actions={[{
-            text: '新增記錄',
-            icon: <ThemedText style={{ fontSize: 24 }}>+</ThemedText>,
-            name: 'add_record',
-          }]}
-          onPressItem={() => router.push('/componemts/screens/AddRecord')}
+          actions={[
+            {
+              text: '新增記錄',
+              icon: <ThemedText style={{ fontSize: 24 }}>+</ThemedText>,
+              name: 'add_record',
+            },
+          ]}
+          onPressItem={(name) => {
+            if (name === 'add_record') {
+              router.push('/componemts/screens/AddRecord');
+            } else if (name === 'edit_record') {
+              router.push('/componemts/screens/EditRecord');
+            }
+          }}
         />
       </ThemedView>
     </SafeAreaView>
