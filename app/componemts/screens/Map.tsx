@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import MapView, { Marker } from 'react-native-maps';
+import React, { useState, useEffect, useRef } from 'react';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { hospitals, clinics, clinics2 } from '../../constants/hospitals';
 import { StyleSheet, View, Alert } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
@@ -15,15 +15,24 @@ export default function Map() {
 
   useEffect(() => {
     async function getCurrentLocation() {
-      if (isFocused) {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          return;
-        }
+      try {
+        if (isFocused) {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            Alert.alert('Location Permission Required', 'Please enable location services to use this feature');
+            return;
+          }
 
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
+          let location = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Balanced
+          });
+          setLocation(location);
+        }
+      } catch (error) {
+        console.error('Location error:', error);
+        setErrorMsg('Failed to get location');
+        Alert.alert('Location Error', 'Unable to get your current location');
       }
     }
     getCurrentLocation();
@@ -59,15 +68,19 @@ export default function Map() {
       <View style={styles.container}>
         <MapView
           style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          mapType="standard"
+          showsUserLocation={true}
+          showsMyLocationButton={true}
+          showsScale={true}
+          onMapReady={(e) => console.log('Map is loaded')}
           initialRegion={{
             latitude: 22.3193,
             longitude: 114.1694,
             latitudeDelta: 1.5,
             longitudeDelta: 1.5,
           }}
-          mapType="standard"
-          showsUserLocation={true}
-          showsMyLocationButton={true}
+
         >
 
           {hospitals.map((hospital, index) => (

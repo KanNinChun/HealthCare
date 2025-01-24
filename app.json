@@ -17,7 +17,12 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.jeff408.HealthCare"
+      "package": "com.jeff408.HealthCare",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAYUU-AsxNs447kEE_yGwvkZMiBkOJhDi0"
+        }
+      }
     },
     "web": {
       "bundler": "metro",
