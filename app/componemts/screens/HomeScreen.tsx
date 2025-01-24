@@ -13,6 +13,8 @@ import { NewsDataType } from '../../constants/news'
 import NewsScreen from './NewsScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import Categories from '../Categories';
+import NewsList from '../NewsList';
 
 interface User {
   id: number;
@@ -39,6 +41,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const [News, setNews] = useState<NewsDataType[]>([]);
+  const [CategoriesNewe, setCategoriesNew] = useState<NewsDataType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -71,11 +74,12 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getNews();
+    getCategoriesNews();
   }, []);
 
   const getNews = async () => {
     try {
-      const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+      const apiUrl = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&language=en&category=health,lifestyle&image=1&removeduplicate=1&size=5`;
       if (!apiUrl) {
         console.error('News API URL is not defined');
         return;
@@ -88,9 +92,33 @@ export default function HomeScreen() {
       }
     }
     catch (error: any) {
-      console.error('Error fetching news:', error.message);
+      console.error('Error fetching news (Maybe RateLimitExceeded):', error.message);
     }
   }
+
+  const getCategoriesNews = async (category: string = '') => {
+    try {
+      let categoryString ='';
+      if(categoryString.length !== 0){
+          categoryString =`&category=${category}`
+      }
+      const apiUrl = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_API_KEY}&language=en&image=1&removeduplicate=1&size=5${categoryString}`;
+      if (!apiUrl) {
+        console.error('News API URL is not defined');
+        return;
+      }
+      const respond = await axios.get(apiUrl);
+      if (respond && respond.data) {
+
+        setCategoriesNew(respond.data.results);
+        setIsLoading(false);
+      }
+    }
+    catch (error: any) {
+      console.error('Error fetching All news (Maybe RateLimitExceeded):', error.message);
+    }
+  }
+
   if (loading) {
     return (
       <ThemedView style={styles.container}>
@@ -98,16 +126,26 @@ export default function HomeScreen() {
       </ThemedView>
     );
   }
+
+  const onCatChanged = (category: string) => {
+    console.log(category);
+    setCategoriesNew([])
+    getCategoriesNews(category);
+
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <ThemedView style={styles.container2}>
-        <ThemedView style={{ paddingTop: safeTop, paddingLeft: 4 }}>
+      <ScrollView style={styles.container2}>
+        <ThemedView style={{ paddingTop: safeTop, paddingLeft: 4 , marginBottom: 20}}>
           <ThemedText type='subtitle'>歡迎回來,</ThemedText>
           <ThemedText type='username'>{username}</ThemedText>
           {isLoading ? (
             <ActivityIndicator size={'large'} />) : (
             <NewsScreen newsList={News} />
           )}
+          <Categories onCategoriesChanged={onCatChanged}/>
+          <NewsList newsList={CategoriesNewe}/>
 
           <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/StepTrackerScreen')}>
             <ThemedText style={styles.buttonText}>步數追蹤</ThemedText>
@@ -116,7 +154,7 @@ export default function HomeScreen() {
             <ThemedText style={styles.buttonText}>血糖記錄</ThemedText>
           </TouchableOpacity>
         </ThemedView>
-      </ThemedView>
+      </ScrollView>
     </SafeAreaView>
   );
 }

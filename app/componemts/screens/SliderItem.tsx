@@ -21,7 +21,6 @@ const SliderItem = ({ sliderItem, index, scrollX }: Props) => {
                 <Image source={{ uri: sliderItem.image_url }} style={styles.image} />
                 <LinearGradient colors={["transparent", "rgba(0,0,0,0.4)"]} style={styles.background}>
                     <View style={styles.sourceInfo}>
-
                         {sliderItem.source_icon && (
                             <Image source={{ uri: sliderItem.source_icon }} style={styles.sourceIcon} />
                         )}
@@ -29,7 +28,7 @@ const SliderItem = ({ sliderItem, index, scrollX }: Props) => {
                     </View>
 
                     <ThemedText style={styles.content}
-                        numberOfLines={3} // 限制文本顯示行數
+                        numberOfLines={2} // 限制文本顯示行數
                         ellipsizeMode='tail' // 超出部分顯示省略號
                         adjustsFontSizeToFit //自動調整字體大小以便填滿寬度
                     >{sliderItem.title}
@@ -54,8 +53,10 @@ const styles = StyleSheet.create({
     },
     content: {
         marginTop: 10,
+        paddingHorizontal: 5,
         fontSize: 16,
         alignItems: 'center',
+        overflow: 'hidden',
     },
     image: {
         width: width - 30,
