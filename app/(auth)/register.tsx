@@ -10,14 +10,13 @@ import {
 } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'; // Import icon library
 import { genSaltSync, hashSync } from "bcrypt-ts";
 import 'react-native-get-random-values';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import  ThemedText  from '../componemts/ThemedText';
 import { ThemedView } from '../componemts/ThemedView';
 import { useColorScheme } from '../hooks/useColorScheme';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 let db: SQLite.SQLiteDatabase | null = null;
 const openDatabase = async () => {
@@ -46,7 +45,7 @@ const RegisterScreen = () => {
 
   const validatePassword = (text: string) => {
     if (text.length < 6) {
-      setPasswordError('密碼最少需要6個字元');
+      setPasswordError('Password must be at least 6 characters long');
       return false
     } else {
       setPasswordError(null);
@@ -56,7 +55,7 @@ const RegisterScreen = () => {
 
   const validateUsername = (text: string) => {
     if (text.length < 6) {
-      setUsernameError('用戶名最少需要6個字元');
+      setUsernameError('Username must be at least 6 characters long');
       return false
     } else {
       setUsernameError(null);
@@ -67,11 +66,11 @@ const RegisterScreen = () => {
   const handleRegister = async () => {
     const database = await openDatabase();
     if (!database) {
-      Alert.alert('錯誤', '無法開啟資料庫');
+      Alert.alert('Error', 'Failed to open database');
       return;
     }
     if (!username || !password) {
-      Alert.alert('錯誤', '請輸入用戶名和密碼');
+      Alert.alert('Error', 'Please enter both username and password.');
       return;
     }
     if (!validateUsername(username) || !validatePassword(password)) {
@@ -80,7 +79,7 @@ const RegisterScreen = () => {
     setLoading(true);
     try {
       const salt = await genSaltSync(4); // when login compare with it can be faster
-      const passwordHash = await hashSync(password, salt); // hash password
+      const passwordHash = await hashSync(password, salt);
 
       await database.withTransactionAsync(async () => {
         await database.runAsync(
@@ -89,26 +88,25 @@ const RegisterScreen = () => {
         );
 
       });
-      console.log("註冊成功: ", username, " : ", passwordHash)
+      console.log("Registration success: ", username, " : ", passwordHash)
       setLoading(false);
-      Alert.alert('成功', '註冊成功. 現在可以登入了.');
+      Alert.alert('Success', 'Registration successful. You can now log in.');
       router.push('/login')
     } catch (error) {
-      console.error('註冊失敗:', error);
-      Alert.alert('錯誤', '註冊失敗.');
+      console.error('Registration error:', error);
+      Alert.alert('Error', 'Registration failed.');
       setLoading(false);
     }
   };
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <SafeAreaView style={styles.container}>
-      <ThemedView style={styles.container2}>
-        <ThemedText type='title' style={{ textAlign: 'center' }}>註冊</ThemedText>
+      <ThemedView style={styles.container}>
+        <ThemedText type='title' style={{ textAlign: 'center' }}>Register</ThemedText>
         <View style={{ flexDirection: "row", alignItems: 'center', }}>
           <TextInput
             style={[styles.input, { color: themeContainerStyle.color, }]}
-            placeholder="用戶名"
+            placeholder="Username"
             placeholderTextColor={themeContainerStyle.color}
             value={username}
             onChangeText={(text) => {
@@ -122,7 +120,7 @@ const RegisterScreen = () => {
         <View style={{ flexDirection: "row", alignItems: 'center', }}>
           <TextInput
             style={[styles.input, { color: themeContainerStyle.color, }]}
-            placeholder="密碼"
+            placeholder="Password"
             placeholderTextColor={themeContainerStyle.color}
             value={password}
             onChangeText={(text) => {
@@ -148,26 +146,22 @@ const RegisterScreen = () => {
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <TouchableOpacity style={[styles.button, { width: '60%', alignSelf: 'center' }]} onPress={handleRegister}>
-            <ThemedText style={styles.buttonText}>註冊賬號</ThemedText>
+            <ThemedText style={styles.buttonText}>Register</ThemedText>
           </TouchableOpacity>
         )}
         <TouchableOpacity
           onPress={() => router.push('/login')}
           style={{alignSelf: 'center', marginTop: 15}}
         >
-          <ThemedText type="link" style={{ textAlign: 'center' }} >已有帳號? 登入</ThemedText>
+          <ThemedText type="link" style={{ textAlign: 'center' }} >Already have an account? Login</ThemedText>
         </TouchableOpacity>
       </ThemedView>
-      </SafeAreaView>
     </ThemeProvider>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  container2: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

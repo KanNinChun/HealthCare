@@ -1,3 +1,4 @@
+// app/(auth)/login.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -11,12 +12,11 @@ import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { compare, hash } from 'bcrypt-ts';
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons'; // Import icon library
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import  ThemedText  from '../componemts/ThemedText';
 import { ThemedView } from '../componemts/ThemedView';
 import { useColorScheme } from '../hooks/useColorScheme';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Define a type for the user object returned from the database
 interface User {
@@ -31,7 +31,7 @@ const openDatabase = async () => {
     db = await SQLite.openDatabaseAsync('healthcare.db');
     return db;
   } catch (error) {
-    console.error("Error while opening the database in login page", error);
+    console.error("Error while opening the database                      in login page", error);
     return null;
   }
 }
@@ -48,11 +48,11 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     const database = await openDatabase();
     if (!database) {
-      Alert.alert('伺服器連線錯誤', '請聯繫系統管理員');
+      Alert.alert('Error', 'Failed to open database');
       return;
     }
     if (!username || !password) {
-      Alert.alert('錯誤', '請輸入用戶名和密碼');
+      Alert.alert('Error', 'Please enter both username and password.');
       return;
     }
 
@@ -63,7 +63,7 @@ const LoginScreen = () => {
         [username],
       );
       if (!result) {
-        Alert.alert('登入失敗', '找不到該用戶');
+        Alert.alert('Login Failed', 'User not found.');
         setLoading(false)
         return;
       }
@@ -72,28 +72,27 @@ const LoginScreen = () => {
 
       if (passwordMatch) {
         await AsyncStorage.setItem('userToken', result.id.toString());
-        console.log("登入成功", result.id.toString())
+        console.log("Login Success", result.id.toString())
         router.replace('../(tabs)'); // Redirect to the main layout
       } else {
-        Alert.alert('登入失敗', '賬戶或密碼錯誤.'); 
+        Alert.alert('Login Failed', 'Incorrect password.');
       }
       setLoading(false);
 
     } catch (error) {
-      console.error('登入失敗:', error);
-      Alert.alert('發生錯誤', '登入失敗.');
+      console.error('Login error:', error);
+      Alert.alert('Error', 'Login failed.');
       setLoading(false);
     }
   };
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <SafeAreaView style={styles.container}>
-      <ThemedView style={styles.container2}>
-        <ThemedText type='title' style={{ textAlign: 'center' }}>登入</ThemedText>
+      <ThemedView style={styles.container}>
+        <ThemedText type='title' style={{ textAlign: 'center' }}>Login</ThemedText>
         <View style={{ flexDirection: "row", alignItems: 'center', }}>
           <TextInput
             style={[styles.input, { color: themeContainerStyle.color, }]}
-            placeholder="用戶名"
+            placeholder="Username"
             placeholderTextColor={themeContainerStyle.color}
             value={username}
             onChangeText={setUsername}
@@ -104,7 +103,7 @@ const LoginScreen = () => {
         <View style={{ flexDirection: "row", alignItems: 'center'}}>
           <TextInput
             style={[styles.input, { color: themeContainerStyle.color }]}
-            placeholder="密碼"
+            placeholder="Password"
             placeholderTextColor={themeContainerStyle.color}
             value={password}
             onChangeText={(text) => {
@@ -128,17 +127,16 @@ const LoginScreen = () => {
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
           <TouchableOpacity style={[styles.button, { width: '60%', alignSelf: 'center' }]} onPress={handleLogin}>
-            <ThemedText style={styles.buttonText}>登入</ThemedText>
+            <ThemedText style={styles.buttonText}>Login</ThemedText>
           </TouchableOpacity>
         )}
         <TouchableOpacity
           onPress={() => router.push('/register')}
           style={{ alignSelf: 'center', marginTop: 15 }}
         >
-          <ThemedText type="link" style={{ textAlign: 'center' }}>沒有帳號? 註冊</ThemedText>
+          <ThemedText type="link" style={{ textAlign: 'center' }}>Don't have an account? Register</ThemedText>
         </TouchableOpacity>
       </ThemedView>
-      </SafeAreaView>
     </ThemeProvider>
   );
 };
@@ -149,9 +147,6 @@ LoginScreen.options = {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  container2: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

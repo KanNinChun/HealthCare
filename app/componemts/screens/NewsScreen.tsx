@@ -25,7 +25,7 @@ const NewsScreen = ({ newsList }: Props) => {
   });
 
   return (
-    <SafeAreaView style={styles.container2}>
+    <SafeAreaView>
       <ThemedView style={styles.container}>
         <ThemedText style={styles.title}>新聞</ThemedText>
         <ThemedView style={styles.slideWrapper}>
@@ -55,9 +55,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  container2: {
-    flex: 0,
-  },
   title: {
     fontSize: 20,
     fontWeight: '600',
