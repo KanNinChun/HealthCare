@@ -63,6 +63,6 @@ const styles = StyleSheet.create({
   },
   slideWrapper: {
     justifyContent: 'center',
-    right: 15,
+    right: 22,
   }
 })

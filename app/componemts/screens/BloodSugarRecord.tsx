@@ -6,7 +6,6 @@ import { ThemedView } from '../ThemedView';
 import ThemedText from '../ThemedText';
 import { format } from 'date-fns';
 import { LineChart } from 'react-native-chart-kit';
-import { Circle } from 'react-native-svg';
 import { FloatingAction } from 'react-native-floating-action';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';

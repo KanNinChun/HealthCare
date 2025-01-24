@@ -146,13 +146,6 @@ export default function HomeScreen() {
           )}
           <Categories onCategoriesChanged={onCatChanged}/>
           <NewsList newsList={CategoriesNewe}/>
-
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/StepTrackerScreen')}>
-            <ThemedText style={styles.buttonText}>步數追蹤</ThemedText>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/BloodSugarRecord')}>
-            <ThemedText style={styles.buttonText}>血糖記錄</ThemedText>
-          </TouchableOpacity>
         </ThemedView>
       </ScrollView>
     </SafeAreaView>

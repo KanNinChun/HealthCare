@@ -52,6 +52,14 @@ const HealthInfoScreen = () => {
                     <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/ChatRoomScreen')}>
                         <ThemedText style={styles.buttonText}>AI醫生</ThemedText>
                     </TouchableOpacity>
+
+                       <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/StepTrackerScreen')}>
+                                <ThemedText style={styles.buttonText}>步數追蹤</ThemedText>
+                              </TouchableOpacity>
+                              <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/BloodSugarRecord')}>
+                                <ThemedText style={styles.buttonText}>血糖記錄</ThemedText>
+                              </TouchableOpacity>
+                              
                 </ThemedView>
             </ThemedView>
         </SafeAreaView>
