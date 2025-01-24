@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     marginBottom: 20,
+    width: '100%',
   },
-
   title: {
     fontSize: 20,
     fontWeight: '600',
@@ -63,5 +63,6 @@ const styles = StyleSheet.create({
   },
   slideWrapper: {
     justifyContent: 'center',
+    right: 15,
   }
 })
