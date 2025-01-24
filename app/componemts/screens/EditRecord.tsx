@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, TouchableOpacity, TextInput } from 'react-native';
+import { View, StyleSheet, Alert, TouchableOpacity, TextInput, useColorScheme } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedView } from '../ThemedView';
 import ThemedText from '../ThemedText';
@@ -12,11 +13,16 @@ const EditRecord = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [editedValue, setEditedValue] = useState('');
+  const [editedDate, setEditedDate] = useState(record ? new Date(record.timestamp) : new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const colorScheme = useColorScheme() || 'light';
+  const placeholderTextColor = colorScheme === 'dark' ? '#888' : '#ccc';
+  const styles = getStyles(colorScheme);
 
   useEffect(() => {
     const initialize = async () => {
       if (!params.record) {
-        console.error('No record provided');
+        console.error('沒有收到記錄參數');
         router.back();
         return;
       }
@@ -24,9 +30,9 @@ const EditRecord = () => {
       try {
         const recordData = JSON.parse(params.record);
         setRecord(recordData);
-        console.log('Received record:', recordData);
+        console.log('收到記錄:', recordData);
       } catch (error) {
-        console.error('Error parsing record:', error);
+        console.error('解析記錄時出錯:', error);
         Alert.alert('錯誤', '無法讀取記錄數據');
         router.back();
       } finally {
@@ -75,7 +81,7 @@ const EditRecord = () => {
         router.back();
       }
     } catch (error) {
-      console.error('Error deleting record:', error);
+      console.error('刪除記錄時出錯:', error);
       Alert.alert('錯誤', '刪除記錄時發生錯誤');
     }
   };
@@ -85,8 +91,8 @@ const EditRecord = () => {
       if (!record) return;
       
       const newValue = parseFloat(editedValue);
-      if (isNaN(newValue)) {
-        Alert.alert('錯誤', '請輸入有效的血糖值');
+      if (isNaN(newValue) || newValue < 1 || newValue > 30) {
+        Alert.alert('錯誤', '請輸入有效的血糖值 (1-30 mmol/L)');
         return;
       }
 
@@ -98,7 +104,7 @@ const EditRecord = () => {
         const records = JSON.parse(stored);
         const updatedRecords = records.map((r: any) =>
           r.timestamp === record.timestamp && r.value === record.value
-            ? { ...r, value: newValue }
+            ? { ...r, value: newValue, timestamp: editedDate.toISOString() }
             : r
         );
         
@@ -107,12 +113,13 @@ const EditRecord = () => {
           JSON.stringify(updatedRecords)
         );
         
-        setRecord({ ...record, value: newValue });
+        setRecord({ ...record, value: newValue, timestamp: editedDate.toISOString() });
         setEditing(false);
         Alert.alert('成功', '記錄已更新');
+        router.push('/componemts/screens/BloodSugarRecord');
       }
     } catch (error) {
-      console.error('Error editing record:', error);
+      console.error('編輯記錄時出錯:', error);
       Alert.alert('錯誤', '更新記錄時發生錯誤');
     }
   };
@@ -146,9 +153,32 @@ const EditRecord = () => {
                 style={styles.input}
                 value={editedValue}
                 onChangeText={setEditedValue}
-                placeholder="輸入新的血糖值"
-                keyboardType="numeric"
+                placeholder="輸入新的血糖值 (1-30)"
+                placeholderTextColor={placeholderTextColor}
+                keyboardType="decimal-pad"
+                textContentType="oneTimeCode"
               />
+              <TouchableOpacity
+                style={styles.dateButton}
+                onPress={() => setShowDatePicker(true)}
+              >
+                <ThemedText style={styles.dateButtonText}>
+                  {format(editedDate, 'yyyy-MM-dd HH:mm')}
+                </ThemedText>
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={editedDate}
+                  mode="date"
+                  display="default"
+                  onChange={(event, date) => {
+                    if (date) {
+                      setEditedDate(date);
+                    }
+                    setShowDatePicker(false);
+                  }}
+                />
+              )}
               <TouchableOpacity
                 style={[styles.button, styles.saveButton]}
                 onPress={handleEdit}
@@ -187,7 +217,7 @@ const EditRecord = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (colorScheme: 'light' | 'dark') => StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
@@ -210,11 +240,12 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: colorScheme === 'dark' ? '#444' : '#ccc',
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
     fontSize: 18,
+    color: colorScheme === 'dark' ? '#fff' : '#000',
   },
   button: {
     paddingVertical: 12,
@@ -239,6 +270,20 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  datePickerContainer: {
+    marginBottom: 16,
+  },
+  dateButton: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+  },
+  dateButtonText: {
+    fontSize: 16,
+    textAlign: 'center',
   },
 });
 
