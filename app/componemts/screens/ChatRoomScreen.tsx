@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // Add useRef
 import { View, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 import { useThemeColor } from '../../hooks/useThemeColor';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,11 +19,11 @@ const openai = new OpenAI({
   apiKey: process.env.EXPO_PUBLIC_DEEPSEEK_API_KEY,
 });
 
-// https://api-docs.deepseek.com/zh-cn/ API文檔
 export default function ChatRoomScreen() {
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const flatListRef = useRef<FlatList>(null); // Add a ref for FlatList
 
   const colorScheme = useColorScheme();
   const userthemeContainerStyle = colorScheme === 'light' ? styles.userlightContainer : styles.userdarkContainer;
@@ -32,7 +32,6 @@ export default function ChatRoomScreen() {
 
   const callOpenAI = async (messages: Message[]) => {
     try {
-      // Ensure messages have proper role/content structure
       const formattedMessages = messages.map(msg => ({
         role: msg.role,
         content: msg.content
@@ -57,7 +56,6 @@ export default function ChatRoomScreen() {
       const userMessage: Message = { role: 'user', content: input };
       const updatedMessages = [...messages, userMessage];
 
-      // Update state and storage atomically
       setMessages(updatedMessages);
       await AsyncStorage.setItem(`chatMessages_${userId}`, JSON.stringify(updatedMessages));
 
@@ -68,7 +66,6 @@ export default function ChatRoomScreen() {
         const gptResponse = await callOpenAI(updatedMessages);
         const assistantMessage: Message = { role: 'assistant', content: gptResponse || 'No response from DeepSeek.' };
 
-        // Update state and storage atomically
         setMessages(prev => {
           const newMessages = [...prev, assistantMessage];
           AsyncStorage.setItem(`chatMessages_${userId}`, JSON.stringify(newMessages));
@@ -100,6 +97,13 @@ export default function ChatRoomScreen() {
     loadMessages();
   }, []);
 
+  // Scroll to the bottom whenever messages change
+  useEffect(() => {
+    if (flatListRef.current && messages.length > 0) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
+
   const clearChat = async () => {
     setMessages([]);
     await AsyncStorage.removeItem('chatMessages');
@@ -114,6 +118,7 @@ export default function ChatRoomScreen() {
       </ThemedView>
       
       <FlatList
+        ref={flatListRef} // Add ref to FlatList
         data={messages}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }: { item: Message }) => (
@@ -129,11 +134,12 @@ export default function ChatRoomScreen() {
       
       <ThemedView style={styles.inputContainer}>
         <TextInput
-          style={inputfiledthemeContainerStyle}
+          style={[styles.inputField, inputfiledthemeContainerStyle]}
           value={input}
           onChangeText={setInput}
           placeholder="請在這裡輸入訊息..."
           placeholderTextColor={placeholderColor}
+          multiline
         />
         <ThemedView style={styles.buttonContainer}>
           <Button title="發送" onPress={sendMessage} />
@@ -146,6 +152,47 @@ export default function ChatRoomScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  headerContainer: {
+    paddingTop: 10,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    paddingTop: 10,
+    textAlign: 'center',
+  },
+  messageList: {
+    flex: 1,
+  },
+  messageListContent: {
+    paddingBottom: 20,
+  },
+  inputContainer: {
+    padding: 10,
+    paddingBottom: 20,
+    backgroundColor: 'transparent',
+  },
+  inputField: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    minHeight: 40,
+    textAlignVertical: 'top',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingVertical: 10,
+    height: 60,
+  },
   userlightContainer: {
     padding: 10,
     borderRadius: 5,
@@ -188,39 +235,5 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     color: '#fff',
-  },
-  container: {
-    flex: 1,
-  },
-  container2: {
-    flex: 1,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    paddingTop: 10,
-    textAlign: 'center',
-  },
-  messageList: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingVertical: 10,
-    height: 60,
-  },
-  headerContainer: {
-    paddingTop: 10,
-  },
-  messageListContent: {
-    paddingBottom: 20,
-  },
-  inputContainer: {
-    padding: 10,
-    paddingBottom: 20,
-    backgroundColor: 'transparent',
   },
 });
