@@ -131,7 +131,6 @@ export default function HomeScreen() {
     console.log(category);
     setCategoriesNew([])
     getCategoriesNews(category);
-
   }
 
   return (

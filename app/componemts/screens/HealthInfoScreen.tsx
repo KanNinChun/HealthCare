@@ -8,9 +8,9 @@ import { useColorScheme } from '@/app/hooks/useColorScheme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HealthInfoScreen = () => {
-    const colorScheme = useColorScheme(); // Get the current color scheme
-    const articleButtonthemeContainerStyle = colorScheme === 'light' ? styles.articleButtonlight : styles.articleButtondark; // Get current theme color
-    const TipsButtonthemeContainerStyle = colorScheme === 'light' ? styles.TipsButtonlight : styles.TipsButtondark; // Get current theme color
+    const colorScheme = useColorScheme();
+    const articleButtonthemeContainerStyle = colorScheme === 'light' ? styles.articleButtonlight : styles.articleButtondark;
+    const TipsButtonthemeContainerStyle = colorScheme === 'light' ? styles.TipsButtonlight : styles.TipsButtondark;
     return (
         <SafeAreaView style={styles.container}>
             <ThemedView style={styles.container2}>

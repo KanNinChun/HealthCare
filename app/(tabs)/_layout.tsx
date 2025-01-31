@@ -1,7 +1,5 @@
-// app/(tabs)/_layout.tsx
 import { View, Text, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import useBackHandler from '../componemts/useBackHandle'
 import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
@@ -10,11 +8,11 @@ import { Stack } from "expo-router";
 import TabsLayOut from '../naviagtions/BottomTabBar';
 import  TabBar  from '../naviagtions/BottomTabBar';
 import TopTabBar from '../naviagtions/TopTabBar';
+
 // Database Initialization
 let db: SQLite.SQLiteDatabase | null = null;
 
 export default function _layout() {
-  //useBackHandler();
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 

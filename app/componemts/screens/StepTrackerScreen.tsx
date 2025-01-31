@@ -26,7 +26,6 @@ const test = () => {
 
     const startTracking = useCallback(() => {
         setIsCounting(true);
-
     }, []);
 
     const stopTracking = useCallback(async () => {
@@ -54,13 +53,6 @@ const test = () => {
 
             // Reset step counter for next session
             setStepCount(0);
-
-            //Debug use
-            // Alert.alert(
-            //     'Steps Saved',
-            //     `Added ${stepCount} steps to ${todayKey}\nTotal steps today: ${stepHistory[todayKey]}\n\nFull History:\n${JSON.stringify(stepHistory, null, 2)}`,
-            //     [{ text: 'OK' }]
-            // );
 
         } catch (error) {
             console.error('Failed to save step data:', error);

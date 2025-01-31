@@ -30,9 +30,6 @@ export default function SettingScreen() {
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <ThemedText style={styles.buttonText}>登出</ThemedText>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => router.push('/componemts/screens/AdminTools')}>
-          <ThemedText style={styles.buttonText}>admin</ThemedText>
-        </TouchableOpacity>
       </ThemedView>
     </SafeAreaView>
   );

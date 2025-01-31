@@ -10,125 +10,131 @@ import {
 } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons'; // Import icon library
-import { genSaltSync, hashSync } from "bcrypt-ts";
-import 'react-native-get-random-values';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import  ThemedText  from '../componemts/ThemedText';
+import { Ionicons } from '@expo/vector-icons';
+import { genSaltSync, hashSync } from "bcrypt-ts"; // 引入密碼加密工具
+import 'react-native-get-random-values'; // 引入隨機值生成工具
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'; 
+import ThemedText from '../componemts/ThemedText';
 import { ThemedView } from '../componemts/ThemedView';
 import { useColorScheme } from '../hooks/useColorScheme';
 
 let db: SQLite.SQLiteDatabase | null = null;
+
+// 打開資料庫的函數
 const openDatabase = async () => {
   try {
-    db = await SQLite.openDatabaseAsync('healthcare.db');
+    db = await SQLite.openDatabaseAsync('healthcare.db'); // 打開 healthcare.db 的資料庫
     return db;
   } catch (error) {
-    console.error("Error while opening the database in register page", error);
+    console.error("在註冊頁面打開資料庫時發生錯誤", error);
     return null;
   }
 }
 
-
 const RegisterScreen = () => {
-  const colorScheme = useColorScheme();
-  const router = useRouter();
-  const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer; //獲取當前主題顏色
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [passwordError, setPasswordError] = useState<string | null>(null); // Store password validation error
-  const [usernameError, setUsernameError] = useState<string | null>(null);  // Store username validation error
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const colorScheme = useColorScheme(); // 獲取當前主題顏色
+  const router = useRouter(); // 獲取路由對象
+  const themeContainerStyle = colorScheme === 'light' ? styles.lightContainer : styles.darkContainer; // 根據主題設置容器樣式
+  const [username, setUsername] = useState(''); // 用戶名狀態
+  const [password, setPassword] = useState(''); // 密碼狀態
+  const [loading, setLoading] = useState(false); // 加載狀態
+  const [passwordError, setPasswordError] = useState<string | null>(null); // 密碼錯誤訊息
+  const [usernameError, setUsernameError] = useState<string | null>(null); // 用戶名錯誤訊息
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false); // 密碼是否可見
 
-  const database = SQLite.useSQLiteContext();
+  const database = SQLite.useSQLiteContext(); // 獲取 SQLite 上下文
 
+  // 驗證密碼的函數
   const validatePassword = (text: string) => {
     if (text.length < 6) {
-      setPasswordError('Password must be at least 6 characters long');
-      return false
+      setPasswordError('密碼長度必須至少為 6 個字符');
+      return false;
     } else {
       setPasswordError(null);
       return true;
     }
   }
 
+  // 驗證用戶名的函數
   const validateUsername = (text: string) => {
     if (text.length < 6) {
-      setUsernameError('Username must be at least 6 characters long');
-      return false
+      setUsernameError('用戶名長度必須至少為 6 個字符');
+      return false;
     } else {
       setUsernameError(null);
       return true;
     }
   }
 
+  // 處理註冊的函數
   const handleRegister = async () => {
-    const database = await openDatabase();
+    const database = await openDatabase(); // 打開資料庫
     if (!database) {
-      Alert.alert('Error', 'Failed to open database');
+      Alert.alert('錯誤', '無法打開資料庫');
       return;
     }
     if (!username || !password) {
-      Alert.alert('Error', 'Please enter both username and password.');
+      Alert.alert('錯誤', '請輸入用戶名和密碼。');
       return;
     }
     if (!validateUsername(username) || !validatePassword(password)) {
-      return;
+      return; // 如果用戶名或密碼驗證失敗，則返回
     }
-    setLoading(true);
+    setLoading(true); // 開始加載
     try {
-      const salt = await genSaltSync(4); // when login compare with it can be faster
-      const passwordHash = await hashSync(password, salt);
+      const salt = await genSaltSync(4); // 生成鹽值
+      const passwordHash = await hashSync(password, salt); // 生成密碼Hash值
 
       await database.withTransactionAsync(async () => {
         await database.runAsync(
-          'INSERT INTO users (username, passwordHash) VALUES (?, ?)',
+          'INSERT INTO users (username, passwordHash) VALUES (?, ?)', // 插入用戶數據到資料庫
           [username, passwordHash],
         );
-
       });
-      console.log("Registration success: ", username, " : ", passwordHash)
-      setLoading(false);
-      Alert.alert('Success', 'Registration successful. You can now log in.');
-      router.push('/login')
+      console.log("註冊成功: ", username, " : ", passwordHash);
+      setLoading(false); // 結束加載
+      Alert.alert('成功', '註冊成功。您現在可以登錄。');
+      router.push('/login'); // 跳轉到登錄頁面
     } catch (error) {
-      console.error('Registration error:', error);
-      Alert.alert('Error', 'Registration failed.');
-      setLoading(false);
+      console.error('註冊錯誤:', error);
+      Alert.alert('錯誤', '註冊失敗。');
+      setLoading(false); // 結束加載
     }
   };
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <ThemedView style={styles.container}>
-        <ThemedText type='title' style={{ textAlign: 'center' }}>Register</ThemedText>
+        <ThemedText type='title' style={{ textAlign: 'center' }}>註冊</ThemedText>
+        {/* 用戶名輸入框 */}
         <View style={{ flexDirection: "row", alignItems: 'center', }}>
           <TextInput
             style={[styles.input, { color: themeContainerStyle.color, }]}
-            placeholder="Username"
+            placeholder="用戶名"
             placeholderTextColor={themeContainerStyle.color}
             value={username}
             onChangeText={(text) => {
-              setUsername(text)
-              validateUsername(text)
+              setUsername(text);
+              validateUsername(text); // 驗證用戶名
             }}
             autoCapitalize="none"
           />
         </View>
         {usernameError ? <ThemedText style={styles.errorText}>{usernameError}</ThemedText> : null}
+        {/* 密碼輸入框 */}
         <View style={{ flexDirection: "row", alignItems: 'center', }}>
           <TextInput
             style={[styles.input, { color: themeContainerStyle.color, }]}
-            placeholder="Password"
+            placeholder="密碼"
             placeholderTextColor={themeContainerStyle.color}
             value={password}
             onChangeText={(text) => {
-              setPassword(text)
-              validatePassword(text);
+              setPassword(text);
+              validatePassword(text); // 驗證密碼
             }}
-            secureTextEntry={!isPasswordVisible}
+            secureTextEntry={!isPasswordVisible} // 控制密碼是否可見
           />
+          {/* 密碼可見性切換按鈕 */}
           <TouchableOpacity
             style={styles.iconButton}
             onPress={() => setIsPasswordVisible(!isPasswordVisible)}
@@ -143,6 +149,7 @@ const RegisterScreen = () => {
         </View>
         {passwordError ? <ThemedText style={styles.errorText}>{passwordError}</ThemedText> : null}
 
+        {/* 註冊按鈕 */}
         {loading ? (
           <ActivityIndicator
             size="large"
@@ -155,14 +162,15 @@ const RegisterScreen = () => {
             onPress={handleRegister}
             testID="register-button"
           >
-            <ThemedText style={styles.buttonText}>Register</ThemedText>
+            <ThemedText style={styles.buttonText}>註冊</ThemedText>
           </TouchableOpacity>
         )}
+        {/* 跳轉到登錄頁面的鏈接 */}
         <TouchableOpacity
           onPress={() => router.push('/login')}
-          style={{alignSelf: 'center', marginTop: 15}}
+          style={{ alignSelf: 'center', marginTop: 15 }}
         >
-          <ThemedText type="link" style={{ textAlign: 'center' }} >Already have an account? Login</ThemedText>
+          <ThemedText type="link" style={{ textAlign: 'center' }}>已經有帳號？登錄</ThemedText>
         </TouchableOpacity>
       </ThemedView>
     </ThemeProvider>

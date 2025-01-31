@@ -7,6 +7,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 
 export default function _layout() {
   const colorScheme = useColorScheme();
+
     const createDbIfNeeded = async (db: SQLiteDatabase) => {
         console.log("Creating database if needed");
         await db.execAsync(`

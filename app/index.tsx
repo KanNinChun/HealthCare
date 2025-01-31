@@ -11,7 +11,7 @@ import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// Database Initialization
+// 初次化資料庫
 let db: SQLite.SQLiteDatabase | null = null;
 
 export default function LandingPage() {
@@ -39,6 +39,7 @@ export default function LandingPage() {
     setup()
   }, []);
 
+  // 登入後導向首頁
   useEffect(() => {
     if (isLoggedIn) {
       router.replace('./(tabs)');

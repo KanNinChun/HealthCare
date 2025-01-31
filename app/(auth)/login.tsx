@@ -1,4 +1,3 @@
-// app/(auth)/login.tsx
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -18,6 +17,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import ThemedText from '../componemts/ThemedText';
 import { ThemedView } from '../componemts/ThemedView';
 import { useColorScheme } from '../hooks/useColorScheme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // Define a type for the user object returned from the database
 interface User {
@@ -141,90 +141,92 @@ const LoginScreen = () => {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <ThemedView style={styles.container}>
-        <ThemedText type='title' style={{ textAlign: 'center' }}>Login</ThemedText>
-        <View style={{ flexDirection: "row", alignItems: 'center', }}>
-          <TextInput
-            style={[styles.input, { color: themeContainerStyle.color, }]}
-            placeholder="Username"
-            placeholderTextColor={themeContainerStyle.color}
-            value={username}
-            onChangeText={setUsername}
-            autoCapitalize="none"
-            testID="username-input"
-          />
-        </View>
-
-        <View style={{ flexDirection: "row", alignItems: 'center' }}>
-          <TextInput
-            style={[styles.input, { color: themeContainerStyle.color }]}
-            placeholder="Password"
-            placeholderTextColor={themeContainerStyle.color}
-            value={password}
-            onChangeText={(text) => {
-              setPassword(text)
-            }}
-            secureTextEntry={!isPasswordVisible}
-            testID="password-input"
-          />
-          <TouchableOpacity
-            style={styles.iconButton}
-            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-            testID="password-toggle"
-          >
-            <Ionicons
-              name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
-              size={24}
-              color={themeContainerStyle.color}
+      <SafeAreaView style={styles.container}>
+        <ThemedView style={styles.container2}>
+          <ThemedText type='title' style={{ textAlign: 'center' }}>Login</ThemedText>
+          <View style={{ flexDirection: "row", alignItems: 'center', }}>
+            <TextInput
+              style={[styles.input, { color: themeContainerStyle.color, }]}
+              placeholder="Username"
+              placeholderTextColor={themeContainerStyle.color}
+              value={username}
+              onChangeText={setUsername}
+              autoCapitalize="none"
+              testID="username-input"
             />
-          </TouchableOpacity>
-        </View>
+          </View>
 
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <>
-            {errorMessage && (
-              <ThemedText style={{ color: 'red', marginBottom: 10, textAlign: 'center' }}>
-                {errorMessage}
-              </ThemedText>
-            )}
+          <View style={{ flexDirection: "row", alignItems: 'center' }}>
+            <TextInput
+              style={[styles.input, { color: themeContainerStyle.color }]}
+              placeholder="Password"
+              placeholderTextColor={themeContainerStyle.color}
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text)
+              }}
+              secureTextEntry={!isPasswordVisible}
+              testID="password-input"
+            />
             <TouchableOpacity
-              style={[styles.button, { width: '60%', alignSelf: 'center' }]}
-              onPress={handleLogin}
-              testID="login-button"
+              style={styles.iconButton}
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              testID="password-toggle"
             >
-              <ThemedText style={styles.buttonText}>Login</ThemedText>
+              <Ionicons
+                name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+                size={24}
+                color={themeContainerStyle.color}
+              />
             </TouchableOpacity>
-            {isFingerprintAvailable && (
-              <>
-                <TouchableOpacity
-                  style={[styles.button, {
-                    width: '60%',
-                    alignSelf: 'center',
-                    marginTop: 10,
-                    backgroundColor: '#34C759',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }]}
-                  onPress={handleFingerprintLogin}
-                  testID="fingerprint-button"
-                >
-                  <Ionicons name="finger-print" size={24} color="white" style={{ marginRight: 8 }} />
-                  <ThemedText style={styles.buttonText}>Login with Fingerprint</ThemedText>
-                </TouchableOpacity>
-              </>
-            )}
-          </>
-        )}
-        <TouchableOpacity
-          onPress={() => router.push('/register')}
-          style={{ alignSelf: 'center', marginTop: 15 }}
-        >
-          <ThemedText type="link" style={{ textAlign: 'center' }}>Don't have an account? Register</ThemedText>
-        </TouchableOpacity>
-      </ThemedView>
+          </View>
+
+          {loading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <>
+              {errorMessage && (
+                <ThemedText style={{ color: 'red', marginBottom: 10, textAlign: 'center' }}>
+                  {errorMessage}
+                </ThemedText>
+              )}
+              <TouchableOpacity
+                style={[styles.button, { width: '60%', alignSelf: 'center' }]}
+                onPress={handleLogin}
+                testID="login-button"
+              >
+                <ThemedText style={styles.buttonText}>Login</ThemedText>
+              </TouchableOpacity>
+              {isFingerprintAvailable && (
+                <>
+                  <TouchableOpacity
+                    style={[styles.button, {
+                      width: '60%',
+                      alignSelf: 'center',
+                      marginTop: 10,
+                      backgroundColor: '#34C759',
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }]}
+                    onPress={handleFingerprintLogin}
+                    testID="fingerprint-button"
+                  >
+                    <Ionicons name="finger-print" size={24} color="white" style={{ marginRight: 8 }} />
+                    <ThemedText style={styles.buttonText}>Login with Fingerprint</ThemedText>
+                  </TouchableOpacity>
+                </>
+              )}
+            </>
+          )}
+          <TouchableOpacity
+            onPress={() => router.push('/register')}
+            style={{ alignSelf: 'center', marginTop: 15 }}
+          >
+            <ThemedText type="link" style={{ textAlign: 'center' }}>Don't have an account? Register</ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
+      </SafeAreaView>
     </ThemeProvider>
   );
 };
@@ -235,6 +237,9 @@ LoginScreen.options = {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  container2: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

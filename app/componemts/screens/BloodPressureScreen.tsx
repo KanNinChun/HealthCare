@@ -6,12 +6,12 @@ import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BloodPressureScreen = () => {
-    const navigation = useNavigation(); // Initialize navigation
+    const navigation = useNavigation(); // 初始化導航
     return (
         <SafeAreaView style={styles.container}>
             <ThemedView style={styles.container2}>
                 <TouchableOpacity style={styles.exitButton} onPress={() => {
-                    navigation.goBack(); // Use navigation to go back
+                    navigation.goBack(); // 返回上一頁
                 }}>
                     <ThemedText style={styles.exitButtonText}>X</ThemedText>
                 </TouchableOpacity>

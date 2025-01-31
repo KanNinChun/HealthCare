@@ -11,26 +11,28 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BloodSugarRecord = () => {
-  const [records, setRecords] = useState<Array<{ value: number; timestamp: string }>>([]);
+  const [records, setRecords] = useState<Array<{ value: number; timestamp: string }>>([]); // 血糖記錄狀態
 
+  // 當頁面聚焦時加載記錄
   useFocusEffect(
     useCallback(() => {
       const loadRecords = async () => {
         try {
-          const userId = await AsyncStorage.getItem('userToken');
+          const userId = await AsyncStorage.getItem('userToken'); // 從 AsyncStorage 獲取用戶 ID
           if (!userId) return;
 
-          const stored = await AsyncStorage.getItem(`bloodSugarRecords_${userId}`);
+          const stored = await AsyncStorage.getItem(`bloodSugarRecords_${userId}`); // 獲取保存的血糖記錄
 
-          if (stored) setRecords(JSON.parse(stored));
+          if (stored) setRecords(JSON.parse(stored)); // 更新記錄狀態
         } catch (error) {
-          console.error('Error loading records:', error);
+          console.error('加載記錄時發生錯誤:', error);
         }
       };
       loadRecords();
     }, [])
   );
 
+  // 根據血糖值獲取健康狀態
   const getStatus = (value: number): string => {
     if (value < 4.0) return '低血糖';
     if (value <= 5.5) return '正常';
@@ -38,41 +40,44 @@ const BloodSugarRecord = () => {
     return '危險';
   };
 
-  // Calculate rolling average for given days
+  // 計算指定天數的平均值
   const getAverage = (days: number): number => {
     const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - days);
+    cutoffDate.setDate(cutoffDate.getDate() - days); // 計算截止日期
 
     const recentRecords = records.filter(record =>
-      new Date(record.timestamp) > cutoffDate
+      new Date(record.timestamp) > cutoffDate // 過濾出最近指定天數的記錄
     );
 
     return recentRecords.length > 0
-      ? recentRecords.reduce((sum, r) => sum + r.value, 0) / recentRecords.length
+      ? recentRecords.reduce((sum, r) => sum + r.value, 0) / recentRecords.length // 計算平均值
       : 0;
   };
 
+  // 將十六進制顏色轉換為 RGB 數值
   const hexToRgb = (hex: string): number => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ?
       parseInt(result[1], 16) << 16 |
       parseInt(result[2], 16) << 8 |
       parseInt(result[3], 16)
-      : 0xFF0000; // default to red if parsing fails
+      : 0xFF0000; // 如果解析失敗，默認為紅色
   };
 
+  // 將 RGB 數值轉換為十六進制顏色
   const colorNumberToHex = (color: number): string => {
     return `#${(color & 0xFFFFFF).toString(16).padStart(6, '0')}`;
   };
 
+  // 根據血糖值獲取對應的顏色
   const getColorForValue = (value: number): number => {
-    if (value < 4.0) return hexToRgb('#0000FF');
-    if (value <= 5.5) return hexToRgb('#00FF00');
-    if (value <= 7.0) return hexToRgb('#FFA500');
-    return hexToRgb('#FF0000');
+    if (value < 4.0) return hexToRgb('#0000FF'); // 低血糖：藍色
+    if (value <= 5.5) return hexToRgb('#00FF00'); // 正常：綠色
+    if (value <= 7.0) return hexToRgb('#FFA500'); // 高血糖：橙色
+    return hexToRgb('#FF0000'); // 危險：紅色
   };
 
-  // Chart configuration with proper TypeScript types
+  // 圖表數據配置
   interface ChartData {
     labels: string[];
     datasets: Array<{
@@ -83,44 +88,44 @@ const BloodSugarRecord = () => {
   }
 
   const chartData: ChartData = {
-    labels: records.map(r => format(new Date(r.timestamp), 'MM/dd')),
+    labels: records.map(r => format(new Date(r.timestamp), 'MM/dd')), // 格式化日期標籤
     datasets: [{
-      data: records.map(r => r.value),
-      color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
-      strokeWidth: 2
+      data: records.map(r => r.value), // 血糖值數據
+      color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`, // 線條顏色
+      strokeWidth: 2 // 線條寬度
     }]
   };
 
-  // Chart config with proper TypeScript type
+  // 圖表配置
   const chartConfig = {
-    backgroundGradientFrom: '#fff',
-    backgroundGradientTo: '#fff',
-    decimalPlaces: 1,
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    backgroundGradientFrom: '#fff', // 背景漸變起始顏色
+    backgroundGradientTo: '#fff', // 背景漸變結束顏色
+    decimalPlaces: 1, // 小數位數
+    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // 文字顏色
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // 標籤顏色
     propsForDots: {
-      strokeWidth: 2,
-      stroke: '#fff'
+      strokeWidth: 2, // 點邊框寬度
+      stroke: '#fff' // 點邊框顏色
     }
   };
 
-  // Chart measurements
-  const chartWidth = Dimensions.get('window').width - 32;
-  const chartHeight = 220;
-  const maxYValue = 10; // Fixed maximum for 0-10 scale
-  const verticalPadding = 20;
+  // 圖表尺寸
+  const chartWidth = Dimensions.get('window').width - 32; // 圖表寬度
+  const chartHeight = 220; // 圖表高度
+  const maxYValue = 10; // Y 軸最大值
+  const verticalPadding = 20; // 垂直間距
 
   return (
     <SafeAreaView style={styles.container}>
       <ThemedView style={styles.container2}>
         <ScrollView>
-          {/* Summary Cards */}
+          {/* 摘要卡片 */}
           <View style={styles.summaryRow}>
             <ThemedView style={[styles.card, styles.latestCard]}>
               <ThemedText style={styles.cardTitle}>最近新增</ThemedText>
               <ThemedText style={styles.cardValue}>
                 {records.length > 0 ?
-                  `${records[records.length - 1].value.toFixed(1)} mmol/L` :
+                  `${records[records.length - 1].value.toFixed(1)} mmol/L` : // 顯示最新記錄
                   '--'
                 }
               </ThemedText>
@@ -141,16 +146,16 @@ const BloodSugarRecord = () => {
             </ThemedView>
           </View>
 
-          {/* Chart */}
+          {/* 圖表 */}
           <View style={styles.chartContainer}>
             {records.length > 0 ? (
               <LineChart
                 data={{
-                  labels: records.map((r) => format(new Date(r.timestamp), 'MM/dd')),
+                  labels: records.map((r) => format(new Date(r.timestamp), 'MM/dd')), // 格式化日期標籤
                   datasets: [{
-                    data: records.map((r) => r.value),
-                    color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
-                    strokeWidth: 2
+                    data: records.map((r) => r.value), // 血糖值數據
+                    color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`, // 線條顏色
+                    strokeWidth: 2 // 線條寬度
                   }]
                 }}
                 width={chartWidth}
@@ -167,11 +172,11 @@ const BloodSugarRecord = () => {
                     stroke: '#fff'
                   }
                 }}
-                bezier
+                bezier // 使用貝塞爾曲線
                 style={{ marginVertical: 25 }}
-                formatYLabel={(value) => `${(Math.round(Number(value))).toFixed(1)} `}
-                segments={5}
-                fromZero
+                formatYLabel={(value) => `${(Math.round(Number(value))).toFixed(1)} `} // 格式化 Y 軸標籤
+                segments={5} // Y 軸分段
+                fromZero // Y 軸從 0 開始
               />
             ) : (
               <ThemedText style={styles.noDataText}>
@@ -179,44 +184,43 @@ const BloodSugarRecord = () => {
               </ThemedText>
             )}
           </View>
-          <ThemedView>
-            {
-              records.length > 0 ? (
-                < ThemedView style={styles.infocontainer}>
-                  <ThemedView style={styles.infolist}>
-                    <ThemedText>血糖值</ThemedText>
-                    <ThemedText>情況</ThemedText>
-                    <ThemedText>日期</ThemedText>
-                  </ThemedView>
 
-                  <View style={styles.recordList}>
-                    {records.map((record, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        style={styles.recordItem}
-                        onPress={() => router.push({
-                          pathname: '/componemts/screens/EditRecord',
-                          params: { record: JSON.stringify(record) }
-                        })}
-      
-                      >
-                        <ThemedText style={[styles.recordValue, { color: colorNumberToHex(getColorForValue(record.value)) }]}>
-                          {record.value} mmol/L
-                        </ThemedText>
-                        <ThemedText style={styles.recordStatus}>{getStatus(record.value)}</ThemedText>
-                        <ThemedText style={styles.recordTimestamp}>
-                          {format(new Date(record.timestamp), 'yyyy-MM-dd HH:mm')}
-                        </ThemedText>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
+          {/* 記錄列表 */}
+          <ThemedView>
+            {records.length > 0 ? (
+              <ThemedView style={styles.infocontainer}>
+                <ThemedView style={styles.infolist}>
+                  <ThemedText>血糖值</ThemedText>
+                  <ThemedText>情況</ThemedText>
+                  <ThemedText>日期</ThemedText>
                 </ThemedView>
-              ) : null
-            }
+
+                <View style={styles.recordList}>
+                  {records.map((record, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={styles.recordItem}
+                      onPress={() => router.push({
+                        pathname: '/componemts/screens/EditRecord',
+                        params: { record: JSON.stringify(record) }
+                      })}
+                    >
+                      <ThemedText style={[styles.recordValue, { color: colorNumberToHex(getColorForValue(record.value)) }]}>
+                        {record.value} mmol/L
+                      </ThemedText>
+                      <ThemedText style={styles.recordStatus}>{getStatus(record.value)}</ThemedText>
+                      <ThemedText style={styles.recordTimestamp}>
+                        {format(new Date(record.timestamp), 'yyyy-MM-dd HH:mm')}
+                      </ThemedText>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </ThemedView>
+            ) : null}
           </ThemedView>
         </ScrollView>
 
-        {/* Floating Action Button */}
+        {/* 浮動按鈕 */}
         <FloatingAction
           actions={[
             {
@@ -227,9 +231,9 @@ const BloodSugarRecord = () => {
           ]}
           onPressItem={(name) => {
             if (name === 'add_record') {
-              router.push('/componemts/screens/AddRecord');
+              router.push('/componemts/screens/AddRecord'); // 跳轉到新增記錄頁面
             } else if (name === 'edit_record') {
-              router.push('/componemts/screens/EditRecord');
+              router.push('/componemts/screens/EditRecord'); // 跳轉到編輯記錄頁面
             }
           }}
         />
@@ -238,6 +242,7 @@ const BloodSugarRecord = () => {
   );
 };
 
+// 樣式表
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -269,7 +274,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   latestCard: {
-    backgroundColor: '#8ccfff',//'#e3f2fd',
+    backgroundColor: '#8ccfff',
   },
   average3Card: {
     backgroundColor: '#fcc46d',
@@ -287,7 +292,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
-
   },
   chartContainer: {
     height: 300,
