@@ -91,7 +91,7 @@ export default function Map() {
               }}
               title={hospital.institution_tc}
               description={hospital.address_tc}
-              pinColor={hospital.with_AE_service_eng === '是' ? '#2ecc71' : '#e74c3c'} // 有英文服務提供 綠色 無就紅色
+              pinColor={hospital.with_AE_service_eng === 'Yes' ? '#2ecc71' : '#e74c3c'} // 有英文服務提供 綠色 無就紅色
             />
           ))}
           {clinics.map((clinic, index) => (  //專科
