@@ -32,7 +32,7 @@ export default function Map() {
       } catch (error) {
         console.error('Location error:', error);
         setErrorMsg('Failed to get location');
-        Alert.alert('Location Error', 'Unable to get your current location');
+       //Alert.alert('Location Error', 'Unable to get your current location');
       }
     }
     getCurrentLocation();
@@ -80,7 +80,6 @@ export default function Map() {
             latitudeDelta: 1.5,
             longitudeDelta: 1.5,
           }}
-
         >
 
           {hospitals.map((hospital, index) => (
@@ -124,7 +123,6 @@ export default function Map() {
     </SafeAreaView>
   )
 }
-
 
 const styles = StyleSheet.create({
   container: {
